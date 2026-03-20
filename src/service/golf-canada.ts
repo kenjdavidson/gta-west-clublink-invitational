@@ -62,14 +62,22 @@ let _cachedLogin: GolfCanadaLoginResponse | null = null;
 // ---------------------------------------------------------------------------
 
 /**
- * Authenticates with Golf Canada using username/password credentials.
+ * Authenticates with Golf Canada using credentials from the
+ * `GOLFCANADA_USERNAME` and `GOLFCANADA_PASSWORD` environment variables.
  *
  * The result is cached after the first successful call so that subsequent
  * calls return the same token without making additional network requests.
  */
-export async function login(username: string, password: string): Promise<GolfCanadaLoginResponse> {
+export async function login(): Promise<GolfCanadaLoginResponse> {
   if (_cachedLogin) {
     return _cachedLogin;
+  }
+
+  const username = process.env.GOLFCANADA_USERNAME;
+  const password = process.env.GOLFCANADA_PASSWORD;
+
+  if (!username || !password) {
+    throw new Error('GOLFCANADA_USERNAME and GOLFCANADA_PASSWORD environment variables must be set');
   }
 
   const body = new URLSearchParams({
@@ -101,16 +109,13 @@ export async function login(username: string, password: string): Promise<GolfCan
 /**
  * Fetches the score history for a member from Golf Canada.
  *
- * @param username  Golf Canada login username (email)
- * @param password  Golf Canada login password
+ * Credentials are read from the `GOLFCANADA_USERNAME` and
+ * `GOLFCANADA_PASSWORD` environment variables.
+ *
  * @param individualId  The member's Golf Canada individual ID
  */
-export async function getHistory(
-  username: string,
-  password: string,
-  individualId: number,
-): Promise<GolfCanadaScoreHistory[]> {
-  const loginData = await login(username, password);
+export async function getHistory(individualId: number): Promise<GolfCanadaScoreHistory[]> {
+  const loginData = await login();
   const url = `${API_BASE}/scores/getHistory?$skip=0&$top=100&individualId=${individualId}`;
 
   const response = await fetch(url, {
