@@ -7,7 +7,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "fetch-scores": "tsx scripts/fetch-scores.ts",
+    "fetch-and-build": "npm run fetch-scores && npm run build"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.1",

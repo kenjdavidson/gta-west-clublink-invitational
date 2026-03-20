@@ -1,0 +1,119 @@
+---
+import * as fs from "fs";
+import * as path from "path";
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import { PlayerRounds } from "../../components/PlayerRounds";
+import type { LeagueConfig, PlayerScore, YearlyScores } from "../../types/index.js";
+import { toSlug } from "../../utils/slug.js";
+
+// ---------------------------------------------------------------------------
+// Static paths — one path per (year, player) combination
+// ---------------------------------------------------------------------------
+
+export function getStaticPaths() {
+  const dataDir = path.join(process.cwd(), "src", "data");
+  if (!fs.existsSync(dataDir)) return [];
+
+  const paths: Array<{
+    params: { year: string; player: string };
+    props: { player: PlayerScore };
+  }> = [];
+
+  for (const file of fs
+    .readdirSync(dataDir)
+    .filter((f) => /^\d{4}\.json$/.test(f))) {
+    const year = file.replace(".json", "");
+    const scores: YearlyScores = JSON.parse(
+      fs.readFileSync(path.join(dataDir, file), "utf-8")
+    );
+    for (const playerScore of scores.players) {
+      paths.push({
+        params: { year, player: toSlug(playerScore.member.name) },
+        props: { player: playerScore },
+      });
+    }
+  }
+
+  return paths;
+}
+
+// ---------------------------------------------------------------------------
+// Page data
+// ---------------------------------------------------------------------------
+
+const { year, player: playerSlug } = Astro.params;
+const { player } = Astro.props as { player: PlayerScore };
+
+const configPath = path.join(process.cwd(), "config", "league.json");
+const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+
+const dataDir = path.join(process.cwd(), "src", "data");
+const availableYears: number[] = fs.existsSync(dataDir)
+  ? fs
+      .readdirSync(dataDir)
+      .filter((f) => /^\d{4}\.json$/.test(f))
+      .map((f) => Number(f.replace(".json", "")))
+      .sort((a, b) => b - a)
+  : [];
+
+// Load all players from this year (for the sidebar)
+const scoresPath = path.join(dataDir, `${year}.json`);
+const yearlyScores: YearlyScores = JSON.parse(
+  fs.readFileSync(scoresPath, "utf-8")
+);
+yearlyScores.players.sort((a, b) => a.totalScore - b.totalScore);
+---
+
+<Layout title={`${player.member.name} – ${config.league.name} ${year}`}>
+  <Header years={availableYears} currentYear={Number(year)} />
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex gap-6">
+      <!-- Left column: player list (navigation) -->
+      <aside class="w-44 shrink-0">
+        <h2
+          class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3"
+        >
+          Players
+        </h2>
+        <ul class="space-y-0.5">
+          {
+            yearlyScores.players.map((p) => {
+              const slug = toSlug(p.member.name);
+              const isActive = slug === playerSlug;
+              return (
+                <li>
+                  <a
+                    href={`/${year}/${slug}`}
+                    class={`block px-3 py-2 text-sm rounded-lg transition-colors ${
+                      isActive
+                        ? "bg-green-700 text-white font-medium"
+                        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
+                    }`}
+                  >
+                    {p.member.name}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+
+        <div class="mt-6 px-3">
+          <a
+            href={`/${year}`}
+            class="text-xs text-green-700 hover:underline"
+          >
+            ← Back to leaderboard
+          </a>
+        </div>
+      </aside>
+
+      <!-- Right column: player rounds -->
+      <div class="flex-1 min-w-0">
+        <PlayerRounds client:load player={player} courses={config.courses} />
+      </div>
+    </div>
+  </main>
+</Layout>

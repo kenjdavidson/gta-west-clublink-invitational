@@ -1,4 +1,5 @@
 import type { Course, PlayerScore, YearlyScores } from "../types/index.js";
+import { toSlug } from "../utils/slug.js";
 
 interface LeaderboardProps {
   scores: YearlyScores;
@@ -74,6 +75,7 @@ export function Leaderboard({ scores, courses }: LeaderboardProps) {
                 rank={index + 1}
                 player={player}
                 courses={courses}
+                year={scores.year}
               />
             ))}
             {players.length === 0 && (
@@ -104,9 +106,10 @@ interface PlayerRowProps {
   rank: number;
   player: PlayerScore;
   courses: Course[];
+  year: number;
 }
 
-function PlayerRow({ rank, player, courses }: PlayerRowProps) {
+function PlayerRow({ rank, player, courses, year }: PlayerRowProps) {
   const isLeader = rank === 1;
 
   return (
@@ -132,7 +135,12 @@ function PlayerRow({ rank, player, courses }: PlayerRowProps) {
 
       {/* Player name */}
       <td className="px-4 py-3 text-sm font-medium text-gray-900">
-        {player.member.name}
+        <a
+          href={`/${year}/${toSlug(player.member.name)}`}
+          className="hover:text-green-700 hover:underline"
+        >
+          {player.member.name}
+        </a>
         <span className="ml-2 text-xs text-gray-400 font-normal">
           #{player.member.cardId}
         </span>
@@ -166,3 +174,4 @@ function PlayerRow({ rank, player, courses }: PlayerRowProps) {
     </tr>
   );
 }
+

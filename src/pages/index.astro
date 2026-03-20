@@ -13,14 +13,6 @@ const configPath = path.join(process.cwd(), "config", "league.json");
 const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
 
 // ---------------------------------------------------------------------------
-// Determine selected year (from query param or config default)
-// ---------------------------------------------------------------------------
-const requestedYear = Astro.url.searchParams.get("year");
-const selectedYear = requestedYear
-  ? Number(requestedYear)
-  : config.league.currentYear;
-
-// ---------------------------------------------------------------------------
 // Discover all years for which we have score data
 // ---------------------------------------------------------------------------
 const dataDir = path.join(process.cwd(), "src", "data");
@@ -32,14 +24,13 @@ const availableYears: number[] = fs.existsSync(dataDir)
       .sort((a, b) => b - a) // newest first
   : [];
 
-const displayYear =
-  availableYears.includes(selectedYear) ? selectedYear : availableYears[0];
+const displayYear = availableYears[0] ?? config.league.currentYear;
 
 // ---------------------------------------------------------------------------
-// Load scores for the selected year
+// Load scores for the most recent year
 // ---------------------------------------------------------------------------
 let scores: YearlyScores | null = null;
-if (displayYear) {
+if (availableYears.length > 0) {
   const scoresPath = path.join(dataDir, `${displayYear}.json`);
   if (fs.existsSync(scoresPath)) {
     scores = JSON.parse(fs.readFileSync(scoresPath, "utf-8")) as YearlyScores;
@@ -48,17 +39,11 @@ if (displayYear) {
   }
 }
 
-const pageTitle = displayYear
-  ? `${config.league.name} – ${displayYear}`
-  : config.league.name;
-const headerYear = displayYear ?? config.league.currentYear;
+const pageTitle = `${config.league.name} – ${displayYear}`;
 ---
 
 <Layout title={pageTitle}>
-  <Header
-    years={availableYears}
-    currentYear={headerYear}
-  />
+  <Header years={availableYears} currentYear={displayYear} />
 
   <main>
     {scores ? (

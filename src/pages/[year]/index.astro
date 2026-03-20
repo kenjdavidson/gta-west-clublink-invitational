@@ -1,0 +1,83 @@
+---
+import * as fs from "fs";
+import * as path from "path";
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import { Leaderboard } from "../../components/Leaderboard";
+import type { LeagueConfig, YearlyScores } from "../../types/index.js";
+import { toSlug } from "../../utils/slug.js";
+
+// ---------------------------------------------------------------------------
+// Static paths — one path per year that has a data file
+// ---------------------------------------------------------------------------
+
+export function getStaticPaths() {
+  const dataDir = path.join(process.cwd(), "src", "data");
+  if (!fs.existsSync(dataDir)) return [];
+
+  return fs
+    .readdirSync(dataDir)
+    .filter((f) => /^\d{4}\.json$/.test(f))
+    .map((f) => ({ params: { year: f.replace(".json", "") } }));
+}
+
+// ---------------------------------------------------------------------------
+// Page data
+// ---------------------------------------------------------------------------
+
+const { year } = Astro.params;
+
+const configPath = path.join(process.cwd(), "config", "league.json");
+const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+
+const dataDir = path.join(process.cwd(), "src", "data");
+const availableYears: number[] = fs.existsSync(dataDir)
+  ? fs
+      .readdirSync(dataDir)
+      .filter((f) => /^\d{4}\.json$/.test(f))
+      .map((f) => Number(f.replace(".json", "")))
+      .sort((a, b) => b - a)
+  : [];
+
+const scoresPath = path.join(dataDir, `${year}.json`);
+const scores: YearlyScores = JSON.parse(
+  fs.readFileSync(scoresPath, "utf-8")
+);
+scores.players.sort((a, b) => a.totalScore - b.totalScore);
+---
+
+<Layout title={`${config.league.name} – ${year}`}>
+  <Header years={availableYears} currentYear={Number(year)} />
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex gap-6">
+      <!-- Left column: player list -->
+      <aside class="w-44 shrink-0">
+        <h2
+          class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3"
+        >
+          Players
+        </h2>
+        <ul class="space-y-0.5">
+          {
+            scores.players.map((player) => (
+              <li>
+                <a
+                  href={`/${year}/${toSlug(player.member.name)}`}
+                  class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+                >
+                  {player.member.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+
+      <!-- Right column: leaderboard -->
+      <div class="flex-1 min-w-0">
+        <Leaderboard client:load scores={scores} courses={config.courses} />
+      </div>
+    </div>
+  </main>
+</Layout>
