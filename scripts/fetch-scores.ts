@@ -38,8 +38,14 @@ const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
 
 const YEAR = Number(process.argv[2] ?? config.league.currentYear);
 
+/** OAuth2 token endpoint for Golf Canada */
+const GOLFCANADA_AUTH_URL =
+  process.env.GOLFCANADA_AUTH_URL ??
+  "https://scg.golfcanada.ca/connect/token";
+
+/** Base URL for the Golf Canada scores/rounds API */
 const GOLFCANADA_BASE_URL =
-  process.env.GOLFCANADA_BASE_URL ?? "https://www.golfcanada.ca/api";
+  process.env.GOLFCANADA_BASE_URL ?? "https://scg.golfcanada.ca/api";
 
 const USERNAME = process.env.GOLFCANADA_USERNAME;
 const PASSWORD = process.env.GOLFCANADA_PASSWORD;
@@ -56,7 +62,7 @@ if (!USERNAME || !PASSWORD) {
 // ---------------------------------------------------------------------------
 
 interface GolfCanadaSession {
-  token: string;
+  accessToken: string;
 }
 
 interface GolfCanadaRound {
@@ -68,13 +74,21 @@ interface GolfCanadaRound {
 }
 
 /**
- * Authenticate with the Golf Canada API and return the session token.
+ * Authenticate with the Golf Canada OAuth2 token endpoint (password grant)
+ * and return the session access token.
  */
 async function authenticate(): Promise<GolfCanadaSession> {
-  const response = await fetch(`${GOLFCANADA_BASE_URL}/auth/login`, {
+  const body = new URLSearchParams({
+    grant_type: "password",
+    username: USERNAME!,
+    password: PASSWORD!,
+    scope: "address email offline_access openid phone profile roles",
+  });
+
+  const response = await fetch(GOLFCANADA_AUTH_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: USERNAME, password: PASSWORD }),
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: body.toString(),
   });
 
   if (!response.ok) {
@@ -83,8 +97,11 @@ async function authenticate(): Promise<GolfCanadaSession> {
     );
   }
 
-  const data = (await response.json()) as { token: string };
-  return { token: data.token };
+  const data = (await response.json()) as { access_token: string };
+  if (!data.access_token) {
+    throw new Error("Authentication response did not include an access_token");
+  }
+  return { accessToken: data.access_token };
 }
 
 /**
@@ -104,7 +121,7 @@ async function fetchRoundsForMember(
     `${GOLFCANADA_BASE_URL}/scores?${params.toString()}`,
     {
       headers: {
-        Authorization: `Bearer ${session.token}`,
+        Authorization: `Bearer ${session.accessToken}`,
         "Content-Type": "application/json",
       },
     }
