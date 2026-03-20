@@ -4,38 +4,25 @@ import * as path from "path";
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import { PlayerRounds } from "../../components/PlayerRounds";
-import type { LeagueConfig, PlayerScore, YearlyScores } from "../../types/index.js";
+import type { LeagueConfig, PlayerScore } from "../../types/index.js";
+import { getYearlyScores } from "../../utils/score-service.js";
 import { toSlug } from "../../utils/slug.js";
 
 // ---------------------------------------------------------------------------
 // Static paths — one path per (year, player) combination
 // ---------------------------------------------------------------------------
 
-export function getStaticPaths() {
-  const dataDir = path.join(process.cwd(), "src", "data");
-  if (!fs.existsSync(dataDir)) return [];
+export async function getStaticPaths() {
+  const configPath = path.join(process.cwd(), "config", "league.json");
+  const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
 
-  const paths: Array<{
-    params: { year: string; player: string };
-    props: { player: PlayerScore };
-  }> = [];
+  const year = config.league.currentYear;
+  const scores = await getYearlyScores(year, config);
 
-  for (const file of fs
-    .readdirSync(dataDir)
-    .filter((f) => /^\d{4}\.json$/.test(f))) {
-    const year = file.replace(".json", "");
-    const scores: YearlyScores = JSON.parse(
-      fs.readFileSync(path.join(dataDir, file), "utf-8")
-    );
-    for (const playerScore of scores.players) {
-      paths.push({
-        params: { year, player: toSlug(playerScore.member.name) },
-        props: { player: playerScore },
-      });
-    }
-  }
-
-  return paths;
+  return scores.players.map((playerScore) => ({
+    params: { year: String(year), player: toSlug(playerScore.member.name) },
+    props: { player: playerScore },
+  }));
 }
 
 // ---------------------------------------------------------------------------
@@ -48,25 +35,12 @@ const { player } = Astro.props as { player: PlayerScore };
 const configPath = path.join(process.cwd(), "config", "league.json");
 const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
 
-const dataDir = path.join(process.cwd(), "src", "data");
-const availableYears: number[] = fs.existsSync(dataDir)
-  ? fs
-      .readdirSync(dataDir)
-      .filter((f) => /^\d{4}\.json$/.test(f))
-      .map((f) => Number(f.replace(".json", "")))
-      .sort((a, b) => b - a)
-  : [];
-
-// Load all players from this year (for the sidebar)
-const scoresPath = path.join(dataDir, `${year}.json`);
-const yearlyScores: YearlyScores = JSON.parse(
-  fs.readFileSync(scoresPath, "utf-8")
-);
-yearlyScores.players.sort((a, b) => a.totalScore - b.totalScore);
+// Re-use the cached result — score-service ensures no duplicate API calls
+const yearlyScores = await getYearlyScores(Number(year), config);
 ---
 
 <Layout title={`${player.member.name} – ${config.league.name} ${year}`}>
-  <Header years={availableYears} currentYear={Number(year)} />
+  <Header years={[Number(year)]} currentYear={Number(year)} />
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="flex gap-6">

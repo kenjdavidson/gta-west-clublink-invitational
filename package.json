@@ -7,9 +7,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "fetch-scores": "tsx scripts/fetch-scores.ts",
-    "fetch-and-build": "npm run fetch-scores && npm run build"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.1",
@@ -21,7 +19,5 @@
     "react-dom": "^19.2.4",
     "tailwindcss": "^4.2.2"
   },
-  "devDependencies": {
-    "tsx": "^4.21.0"
-  }
+  "devDependencies": {}
 }

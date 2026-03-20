@@ -4,7 +4,8 @@ import * as path from "path";
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import { Leaderboard } from "../components/Leaderboard";
-import type { LeagueConfig, YearlyScores } from "../types/index.js";
+import type { LeagueConfig } from "../types/index.js";
+import { getYearlyScores } from "../utils/score-service.js";
 
 // ---------------------------------------------------------------------------
 // Load league configuration
@@ -12,48 +13,28 @@ import type { LeagueConfig, YearlyScores } from "../types/index.js";
 const configPath = path.join(process.cwd(), "config", "league.json");
 const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
 
-// ---------------------------------------------------------------------------
-// Discover all years for which we have score data
-// ---------------------------------------------------------------------------
-const dataDir = path.join(process.cwd(), "src", "data");
-const availableYears: number[] = fs.existsSync(dataDir)
-  ? fs
-      .readdirSync(dataDir)
-      .filter((f) => /^\d{4}\.json$/.test(f))
-      .map((f) => Number(f.replace(".json", "")))
-      .sort((a, b) => b - a) // newest first
-  : [];
-
-const displayYear = availableYears[0] ?? config.league.currentYear;
+const { currentYear } = config.league;
 
 // ---------------------------------------------------------------------------
-// Load scores for the most recent year
+// Fetch scores for the current year via the score service (cached)
 // ---------------------------------------------------------------------------
-let scores: YearlyScores | null = null;
-if (availableYears.length > 0) {
-  const scoresPath = path.join(dataDir, `${displayYear}.json`);
-  if (fs.existsSync(scoresPath)) {
-    scores = JSON.parse(fs.readFileSync(scoresPath, "utf-8")) as YearlyScores;
-    // Ensure players are sorted by total score ascending (best score first)
-    scores.players.sort((a, b) => a.totalScore - b.totalScore);
-  }
-}
+const scores = await getYearlyScores(currentYear, config);
 
-const pageTitle = `${config.league.name} – ${displayYear}`;
+const pageTitle = `${config.league.name} – ${currentYear}`;
 ---
 
 <Layout title={pageTitle}>
-  <Header years={availableYears} currentYear={displayYear} />
+  <Header years={[currentYear]} currentYear={currentYear} />
 
   <main>
-    {scores ? (
+    {scores.players.length > 0 ? (
       <Leaderboard
         client:load
         scores={scores}
         courses={config.courses}
       />
     ) : (
-      <p class="p-8 text-center text-gray-500">No score data available yet. Run the fetch script to populate scores.</p>
+      <p class="p-8 text-center text-gray-500">No score data available yet for this season.</p>
     )}
   </main>
 </Layout>
