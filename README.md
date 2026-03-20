@@ -1,2 +1,2 @@
-# gta-west-clublink-league
-Leaderboard for the GTA West Clublink League
+# gta-west-clublink-invitational
+Leaderboard for the GTA West Clublink Invitational
