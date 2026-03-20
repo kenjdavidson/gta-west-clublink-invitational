@@ -5,21 +5,24 @@ interface Props {
 }
 
 const { years, currentYear } = Astro.props;
+const base = import.meta.env.BASE_URL;
 ---
 
-<header class="bg-green-800 text-white shadow-lg">
+<header class="bg-green-900 text-white shadow-lg border-b-4 border-yellow-500">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <!-- Left: Icon + Title -->
       <div class="flex items-center gap-3">
-        <img
-          src="/logo.svg"
-          alt="GTA West Clublink League logo"
-          class="h-10 w-10 object-contain"
-          onerror="this.style.display='none'"
-        />
-        <a href="/" class="text-xl font-bold tracking-tight hover:text-green-200 transition-colors">
-          GTA West Clublink League
+        <a href={base} class="flex items-center gap-3 group">
+          <img
+            src={`${base}logo.svg`}
+            alt="GTA West Clublink League logo"
+            class="h-10 w-10 object-contain"
+            onerror="this.style.display='none'"
+          />
+          <span class="text-xl font-bold tracking-tight text-white group-hover:text-yellow-300 transition-colors">
+            GTA West Clublink League
+          </span>
         </a>
       </div>
 
@@ -29,10 +32,10 @@ const { years, currentYear } = Astro.props;
           <nav class="flex items-center gap-2" aria-label="Year navigation">
             {years.map((y) => (
               <a
-                href={`/${y}`}
+                href={`${base}${y}`}
                 class={`text-sm font-medium px-3 py-1.5 rounded-md transition-colors ${
                   y === currentYear
-                    ? "bg-green-600 text-white"
+                    ? "bg-yellow-500 text-green-900 font-semibold"
                     : "text-green-200 hover:bg-green-700 hover:text-white"
                 }`}
               >
@@ -44,7 +47,7 @@ const { years, currentYear } = Astro.props;
       }
       {
         years.length === 1 && (
-          <a href={`/${currentYear}`} class="text-sm font-medium text-green-200 hover:text-white transition-colors">
+          <a href={`${base}${currentYear}`} class="text-sm font-medium text-yellow-400 hover:text-yellow-200 transition-colors">
             {currentYear}
           </a>
         )

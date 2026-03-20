@@ -59,7 +59,7 @@ const yearlyScores = await getYearlyScores(Number(year), config);
               return (
                 <li>
                   <a
-                    href={`/${year}/${slug}`}
+                    href={`${import.meta.env.BASE_URL}${year}/${slug}`}
                     class={`block px-3 py-2 text-sm rounded-lg transition-colors ${
                       isActive
                         ? "bg-green-700 text-white font-medium"
@@ -76,7 +76,7 @@ const yearlyScores = await getYearlyScores(Number(year), config);
 
         <div class="mt-6 px-3">
           <a
-            href={`/${year}`}
+            href={`${import.meta.env.BASE_URL}${year}`}
             class="text-xs text-green-700 hover:underline"
           >
             ← Back to leaderboard

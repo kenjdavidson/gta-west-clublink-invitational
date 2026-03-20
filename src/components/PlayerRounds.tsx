@@ -46,7 +46,7 @@ export function PlayerRounds({ player, courses }: PlayerRoundsProps) {
   });
 
   function thClass(field: SortField) {
-    return `px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer select-none hover:bg-green-600 transition-colors ${sortField === field ? "bg-green-600" : ""}`;
+    return `px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider cursor-pointer select-none hover:bg-green-700 transition-colors ${sortField === field ? "bg-green-700" : ""}`;
   }
 
   return (
@@ -64,7 +64,7 @@ export function PlayerRounds({ player, courses }: PlayerRoundsProps) {
         <div className="overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
           <table className="min-w-full divide-y divide-gray-200 bg-white">
             <thead>
-              <tr className="bg-green-700 text-white">
+              <tr className="bg-green-900 text-white">
                 <th
                   scope="col"
                   className={thClass("course")}

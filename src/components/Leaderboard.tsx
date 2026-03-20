@@ -18,7 +18,7 @@ export function Leaderboard({ scores, courses }: LeaderboardProps) {
       <div className="overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
         <table className="min-w-full divide-y divide-gray-200 bg-white">
           <thead>
-            <tr className="bg-green-700 text-white">
+            <tr className="bg-green-900 text-white">
               <th
                 scope="col"
                 className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider w-8"
@@ -36,17 +36,14 @@ export function Leaderboard({ scores, courses }: LeaderboardProps) {
                   key={course.clubId}
                   scope="col"
                   colSpan={course.roundsCount}
-                  className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider border-l border-green-600"
+                  className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider border-l border-green-700"
                 >
                   <span className="block">{course.name}</span>
-                  <span className="block text-green-200 normal-case font-normal">
-                    Best {course.roundsCount}
-                  </span>
                 </th>
               ))}
               <th
                 scope="col"
-                className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider border-l border-green-600"
+                className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider border-l border-green-700"
               >
                 Total
               </th>
@@ -116,7 +113,7 @@ function PlayerRow({ rank, player, courses, year }: PlayerRowProps) {
     <tr
       className={`transition-colors ${
         isLeader
-          ? "bg-yellow-50 font-semibold"
+          ? "bg-yellow-50 font-semibold ring-1 ring-inset ring-yellow-300"
           : rank % 2 === 0
             ? "bg-gray-50"
             : "bg-white"
@@ -136,7 +133,7 @@ function PlayerRow({ rank, player, courses, year }: PlayerRowProps) {
       {/* Player name */}
       <td className="px-4 py-3 text-sm font-medium text-gray-900">
         <a
-          href={`/${year}/${toSlug(player.member.name)}`}
+          href={`${import.meta.env.BASE_URL}${year}/${toSlug(player.member.name)}`}
           className="hover:text-green-700 hover:underline"
         >
           {player.member.name}
@@ -166,7 +163,7 @@ function PlayerRow({ rank, player, courses, year }: PlayerRowProps) {
       })}
 
       {/* Total */}
-      <td className="px-4 py-3 text-sm text-center font-semibold text-green-800 border-l border-gray-100 tabular-nums">
+      <td className="px-4 py-3 text-sm text-center font-semibold text-yellow-700 border-l border-gray-100 tabular-nums">
         {player.totalScore > 0
           ? formatDifferential(player.totalScore)
           : "–"}
