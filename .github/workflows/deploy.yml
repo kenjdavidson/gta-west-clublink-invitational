@@ -15,7 +15,7 @@ jobs:
     name: Fetch scores and deploy to GitHub Pages
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # needed to push to gh-pages branch
+      contents: write  # needed to push updated score data and to push to gh-pages branch
 
     steps:
       - name: Checkout
@@ -35,9 +35,13 @@ jobs:
           GOLFCANADA_USERNAME: ${{ secrets.GOLFCANADA_USERNAME }}
           GOLFCANADA_PASSWORD: ${{ secrets.GOLFCANADA_PASSWORD }}
         run: npm run fetch-scores
-        # If credentials are not configured, skip fetching and use the
-        # placeholder data already committed in src/data/
-        continue-on-error: true
+
+      - name: Commit updated score data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/
+          git diff --cached --quiet || (git commit -m "chore: update score data [skip ci]" && git pull --rebase && git push)
 
       - name: Build site
         run: npm run build
