@@ -1,16 +1,121 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <!-- Golf flag on green -->
-  <rect x="0" y="0" width="100" height="100" rx="12" fill="#166534"/>
-  <!-- Flag pole -->
-  <line x1="38" y1="20" x2="38" y2="80" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-  <!-- Flag -->
-  <polygon points="38,20 72,32 38,44" fill="#fbbf24"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <radialGradient id="greenBg" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#2d7a50"/>
+      <stop offset="100%" stop-color="#1b4332"/>
+    </radialGradient>
+    <!-- Top arc: large-arc clockwise from left to right = traces TOP of circle (text reads L→R) -->
+    <path id="topArc" d="M 40,250 A 210,210 0 1,1 460,250" fill="none"/>
+    <!-- Bottom arc: large-arc clockwise from right to left = traces BOTTOM (text reads L→R) -->
+    <path id="bottomArc" d="M 460,250 A 210,210 0 1,1 40,250" fill="none"/>
+  </defs>
+
+  <!-- Outermost gold ring -->
+  <circle cx="250" cy="250" r="248" fill="#c9a227"/>
+  <!-- Dark separator -->
+  <circle cx="250" cy="250" r="238" fill="#111111"/>
+  <!-- Gold inner border -->
+  <circle cx="250" cy="250" r="230" fill="#c9a227"/>
+  <!-- Dark inner separator -->
+  <circle cx="250" cy="250" r="221" fill="#111111"/>
+  <!-- Main green background -->
+  <circle cx="250" cy="250" r="213" fill="url(#greenBg)"/>
+
+  <!-- Gold side dots -->
+  <circle cx="35" cy="250" r="6" fill="#c9a227"/>
+  <circle cx="465" cy="250" r="6" fill="#c9a227"/>
+
+  <!-- === TOP ARC TEXT === -->
+  <text font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="bold" fill="#c9a227" letter-spacing="2">
+    <textPath href="#topArc" startOffset="4%">WEST GTA CLUBLINK MEN'S INVITATIONAL</textPath>
+  </text>
+
+  <!-- === BOTTOM ARC TEXT === -->
+  <text font-family="Georgia, 'Times New Roman', serif" font-size="21" font-weight="bold" fill="#c9a227" letter-spacing="4">
+    <textPath href="#bottomArc" startOffset="18%">PREMIUM GOLF EVENT</textPath>
+  </text>
+
+  <!-- EST. 🍁 2026 -->
+  <text x="210" y="122" text-anchor="middle" font-family="Georgia, serif" font-size="17" font-weight="bold" fill="#c9a227" letter-spacing="2">EST.</text>
+  <text x="250" y="120" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#cc0000">&#x1F341;</text>
+  <text x="292" y="122" text-anchor="middle" font-family="Georgia, serif" font-size="17" font-weight="bold" fill="#c9a227" letter-spacing="2">2026</text>
+
+  <!-- === TORONTO SKYLINE === -->
+  <!-- CN Tower spire -->
+  <polygon points="250,138 248,155 252,155" fill="#c9a227"/>
+  <!-- CN Tower shaft -->
+  <rect x="248" y="154" width="4" height="24" fill="#c9a227"/>
+  <!-- CN Tower main body (wider) -->
+  <rect x="245" y="176" width="10" height="22" fill="#c9a227"/>
+  <!-- CN Tower lookout pod -->
+  <rect x="241" y="179" width="18" height="9" fill="#c9a227"/>
+  <!-- Rogers Centre dome -->
+  <ellipse cx="207" cy="196" rx="17" ry="8" fill="#c9a227"/>
+
+  <!-- Left skyline buildings -->
+  <rect x="183" y="188" width="13" height="10" fill="#c9a227"/>
+  <rect x="197" y="183" width="10" height="15" fill="#c9a227"/>
+  <rect x="208" y="187" width="12" height="11" fill="#c9a227"/>
+  <rect x="221" y="175" width="10" height="23" fill="#c9a227"/>
+  <rect x="232" y="170" width="12" height="28" fill="#c9a227"/>
+
+  <!-- Right skyline buildings -->
+  <rect x="256" y="172" width="13" height="26" fill="#c9a227"/>
+  <rect x="270" y="178" width="11" height="20" fill="#c9a227"/>
+  <rect x="282" y="183" width="13" height="15" fill="#c9a227"/>
+  <rect x="296" y="186" width="10" height="12" fill="#c9a227"/>
+  <rect x="307" y="189" width="9" height="9" fill="#c9a227"/>
+
+  <!-- Skyline ground line -->
+  <rect x="183" y="198" width="133" height="3" fill="#c9a227"/>
+
+  <!-- === GOLF FLAG & PIN === -->
+  <!-- Pole -->
+  <line x1="250" y1="210" x2="250" y2="300" stroke="#cccccc" stroke-width="3" stroke-linecap="round"/>
+  <!-- Red flag -->
+  <polygon points="250,211 278,223 250,235" fill="#cc0000"/>
+
+  <!-- === GOLF GREEN === -->
+  <ellipse cx="250" cy="316" rx="80" ry="22" fill="#2d8a4e"/>
+
+  <!-- Golf tee peg -->
+  <polygon points="247,301 253,301 251,316 249,316" fill="#c9a227"/>
   <!-- Golf ball -->
-  <circle cx="62" cy="72" r="14" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.5"/>
-  <!-- Ball dimples -->
-  <circle cx="58" cy="67" r="2" fill="#d1d5db"/>
-  <circle cx="66" cy="67" r="2" fill="#d1d5db"/>
-  <circle cx="62" cy="73" r="2" fill="#d1d5db"/>
-  <circle cx="57" cy="76" r="2" fill="#d1d5db"/>
-  <circle cx="67" cy="76" r="2" fill="#d1d5db"/>
+  <circle cx="250" cy="294" r="16" fill="#f5f5f5" stroke="#d0d0d0" stroke-width="0.5"/>
+  <!-- Dimples -->
+  <circle cx="245" cy="290" r="2.5" fill="#c8cacb" opacity="0.8"/>
+  <circle cx="255" cy="290" r="2.5" fill="#c8cacb" opacity="0.8"/>
+  <circle cx="250" cy="300" r="2.5" fill="#c8cacb" opacity="0.8"/>
+
+  <!-- === LAUREL BRANCHES LEFT === -->
+  <line x1="173" y1="285" x2="152" y2="358" stroke="#b8960c" stroke-width="2.5"/>
+  <ellipse cx="168" cy="291" rx="13" ry="5.5" fill="#b8960c" transform="rotate(-42 168 291)"/>
+  <ellipse cx="160" cy="303" rx="13" ry="5.5" fill="#b8960c" transform="rotate(-30 160 303)"/>
+  <ellipse cx="156" cy="317" rx="13" ry="5.5" fill="#b8960c" transform="rotate(-15 156 317)"/>
+  <ellipse cx="155" cy="332" rx="13" ry="5.5" fill="#b8960c" transform="rotate(0 155 332)"/>
+  <ellipse cx="158" cy="346" rx="13" ry="5.5" fill="#b8960c" transform="rotate(15 158 346)"/>
+  <ellipse cx="165" cy="357" rx="12" ry="5" fill="#b8960c" transform="rotate(28 165 357)"/>
+
+  <!-- === LAUREL BRANCHES RIGHT === -->
+  <line x1="327" y1="285" x2="348" y2="358" stroke="#b8960c" stroke-width="2.5"/>
+  <ellipse cx="332" cy="291" rx="13" ry="5.5" fill="#b8960c" transform="rotate(42 332 291)"/>
+  <ellipse cx="340" cy="303" rx="13" ry="5.5" fill="#b8960c" transform="rotate(30 340 303)"/>
+  <ellipse cx="344" cy="317" rx="13" ry="5.5" fill="#b8960c" transform="rotate(15 344 317)"/>
+  <ellipse cx="345" cy="332" rx="13" ry="5.5" fill="#b8960c" transform="rotate(0 345 332)"/>
+  <ellipse cx="342" cy="346" rx="13" ry="5.5" fill="#b8960c" transform="rotate(-15 342 346)"/>
+  <ellipse cx="335" cy="357" rx="12" ry="5" fill="#b8960c" transform="rotate(-28 335 357)"/>
+
+  <!-- === CLUBLINK BANNER === -->
+  <!-- Ribbon background -->
+  <path d="M 148,357 C 155,343 250,348 352,357 C 345,378 250,382 148,357 Z" fill="#c9a227"/>
+  <!-- Ribbon shading -->
+  <path d="M 148,357 C 155,343 250,348 352,357" fill="none" stroke="#a07c10" stroke-width="1.5"/>
+  <!-- Decorative curls -->
+  <path d="M 148,357 Q 138,362 148,370" fill="none" stroke="#c9a227" stroke-width="3" stroke-linecap="round"/>
+  <path d="M 352,357 Q 362,362 352,370" fill="none" stroke="#c9a227" stroke-width="3" stroke-linecap="round"/>
+  <!-- CLUBLINK text -->
+  <text x="250" y="375" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="bold" fill="#1b4332" letter-spacing="5">CLUBLINK</text>
+
+  <!-- Inner gold ring accent -->
+  <circle cx="250" cy="250" r="213" fill="none" stroke="#c9a227" stroke-width="1.5" opacity="0.6"/>
 </svg>

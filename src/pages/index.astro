@@ -6,7 +6,6 @@ import Header from "../components/Header.astro";
 import { Leaderboard } from "../components/Leaderboard";
 import type { LeagueConfig } from "../types/index.js";
 import { getYearlyScores } from "../utils/score-service.js";
-import { toSlug } from "../utils/slug.js";
 
 // ---------------------------------------------------------------------------
 // Load league configuration
@@ -28,38 +27,10 @@ const pageTitle = `${config.league.name} – ${currentYear}`;
   <Header years={[currentYear]} currentYear={currentYear} leagueName={config.league.name} />
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex gap-6">
-      <!-- Left column: player list -->
-      <aside class="w-44 shrink-0">
-        <h2
-          class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3"
-        >
-          Players
-        </h2>
-        <ul class="space-y-0.5">
-          {
-            scores.players.map((player) => (
-              <li>
-                <a
-                  href={`${import.meta.env.BASE_URL}${currentYear}/${toSlug(player.member.name)}`}
-                  class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
-                >
-                  {player.member.name}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </aside>
-
-      <!-- Right column: leaderboard -->
-      <div class="flex-1 min-w-0">
-        {scores.players.length > 0 ? (
-          <Leaderboard client:load scores={scores} courses={config.courses} />
-        ) : (
-          <p class="p-8 text-center text-gray-500">No score data available yet for this season.</p>
-        )}
-      </div>
-    </div>
+    {scores.players.length > 0 ? (
+      <Leaderboard client:load scores={scores} courses={config.courses} />
+    ) : (
+      <p class="p-8 text-center text-gray-500">No score data available yet for this season.</p>
+    )}
   </main>
 </Layout>

@@ -4,13 +4,14 @@ import { toSlug } from "../utils/slug.js";
 interface LeaderboardProps {
   scores: YearlyScores;
   courses: Course[];
+  showNames?: boolean;
 }
 
 function formatDifferential(value: number): string {
   return value.toFixed(1);
 }
 
-export function Leaderboard({ scores, courses }: LeaderboardProps) {
+export function Leaderboard({ scores, courses, showNames = false }: LeaderboardProps) {
   const { players } = scores;
 
   return (
@@ -25,12 +26,14 @@ export function Leaderboard({ scores, courses }: LeaderboardProps) {
               >
                 #
               </th>
-              <th
-                scope="col"
-                className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider"
-              >
-                Player
-              </th>
+              {showNames && (
+                <th
+                  scope="col"
+                  className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider"
+                >
+                  Player
+                </th>
+              )}
               {courses.map((course) => (
                 <th
                   key={course.clubId}
@@ -51,7 +54,7 @@ export function Leaderboard({ scores, courses }: LeaderboardProps) {
             {/* Sub-header: round numbers */}
             <tr className="bg-green-50 text-green-800 text-xs">
               <th className="px-4 py-2" />
-              <th className="px-4 py-2" />
+              {showNames && <th className="px-4 py-2" />}
               {courses.map((course) =>
                 Array.from({ length: course.roundsCount }, (_, i) => (
                   <th
@@ -73,13 +76,15 @@ export function Leaderboard({ scores, courses }: LeaderboardProps) {
                 player={player}
                 courses={courses}
                 year={scores.year}
+                showNames={showNames}
               />
             ))}
             {players.length === 0 && (
               <tr>
                 <td
                   colSpan={
-                    2 +
+                    1 +
+                    (showNames ? 1 : 0) +
                     courses.reduce((sum, c) => sum + c.roundsCount, 0) +
                     1
                   }
@@ -104,9 +109,10 @@ interface PlayerRowProps {
   player: PlayerScore;
   courses: Course[];
   year: number;
+  showNames: boolean;
 }
 
-function PlayerRow({ rank, player, courses, year }: PlayerRowProps) {
+function PlayerRow({ rank, player, courses, year, showNames }: PlayerRowProps) {
   const isLeader = rank === 1;
 
   return (
@@ -130,15 +136,17 @@ function PlayerRow({ rank, player, courses, year }: PlayerRowProps) {
         )}
       </td>
 
-      {/* Player name */}
-      <td className="px-4 py-3 text-sm font-medium text-gray-900">
-        <a
-          href={`${import.meta.env.BASE_URL}${year}/${toSlug(player.member.name)}`}
-          className="hover:text-green-700 hover:underline"
-        >
-          {player.member.name}
-        </a>
-      </td>
+      {/* Player name (only when showNames is true) */}
+      {showNames && (
+        <td className="px-4 py-3 text-sm font-medium text-gray-900">
+          <a
+            href={`${import.meta.env.BASE_URL}${year}/${toSlug(player.member.name)}`}
+            className="hover:text-green-700 hover:underline"
+          >
+            {player.member.name}
+          </a>
+        </td>
+      )}
 
       {/* Best rounds per course */}
       {courses.map((course) => {
