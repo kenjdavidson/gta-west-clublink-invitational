@@ -6,7 +6,6 @@ import Header from "../../components/Header.astro";
 import { Leaderboard } from "../../components/Leaderboard";
 import type { LeagueConfig } from "../../types/index.js";
 import { getYearlyScores } from "../../utils/score-service.js";
-import { toSlug } from "../../utils/slug.js";
 
 // ---------------------------------------------------------------------------
 // Static paths — one path per configured season year
@@ -34,34 +33,6 @@ const scores = await getYearlyScores(Number(year), config);
   <Header years={[Number(year)]} currentYear={Number(year)} leagueName={config.league.name} />
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex gap-6">
-      <!-- Left column: player list -->
-      <aside class="w-44 shrink-0">
-        <h2
-          class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3"
-        >
-          Players
-        </h2>
-        <ul class="space-y-0.5">
-          {
-            scores.players.map((player) => (
-              <li>
-                <a
-                  href={`${import.meta.env.BASE_URL}${year}/${toSlug(player.member.name)}`}
-                  class="block px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
-                >
-                  {player.member.name}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </aside>
-
-      <!-- Right column: leaderboard -->
-      <div class="flex-1 min-w-0">
-        <Leaderboard client:load scores={scores} courses={config.courses} />
-      </div>
-    </div>
+    <Leaderboard client:load scores={scores} courses={config.courses} />
   </main>
 </Layout>
