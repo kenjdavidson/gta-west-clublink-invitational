@@ -1,0 +1,40 @@
+{
+  "league": {
+    "name": "GTA West Clublink League",
+    "currentYear": 2025
+  },
+  "members": [
+    {
+      "name": "Player One",
+      "memberNumber": "1000001",
+      "golfCanadaId": "GC1000001"
+    },
+    {
+      "name": "Player Two",
+      "memberNumber": "1000002",
+      "golfCanadaId": "GC1000002"
+    },
+    {
+      "name": "Player Three",
+      "memberNumber": "1000003",
+      "golfCanadaId": "GC1000003"
+    }
+  ],
+  "courses": [
+    {
+      "name": "Weston Golf and Country Club",
+      "clubId": "18001",
+      "roundsCount": 3
+    },
+    {
+      "name": "Pheasant Run Golf Club",
+      "clubId": "18002",
+      "roundsCount": 3
+    },
+    {
+      "name": "Humber Valley Resort",
+      "clubId": "18003",
+      "roundsCount": 3
+    }
+  ]
+}
