@@ -22,5 +22,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Fetch scores from Golf Canada API
+        env:
+          GOLFCANADA_USERNAME: ${{ secrets.GOLFCANADA_USERNAME }}
+          GOLFCANADA_PASSWORD: ${{ secrets.GOLFCANADA_PASSWORD }}
+        run: npm run fetch-scores
+
       - name: Build site
         run: npm run build

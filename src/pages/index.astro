@@ -24,11 +24,13 @@ const selectedYear = requestedYear
 // Discover all years for which we have score data
 // ---------------------------------------------------------------------------
 const dataDir = path.join(process.cwd(), "src", "data");
-const availableYears: number[] = fs
-  .readdirSync(dataDir)
-  .filter((f) => /^\d{4}\.json$/.test(f))
-  .map((f) => Number(f.replace(".json", "")))
-  .sort((a, b) => b - a); // newest first
+const availableYears: number[] = fs.existsSync(dataDir)
+  ? fs
+      .readdirSync(dataDir)
+      .filter((f) => /^\d{4}\.json$/.test(f))
+      .map((f) => Number(f.replace(".json", "")))
+      .sort((a, b) => b - a) // newest first
+  : [];
 
 const displayYear =
   availableYears.includes(selectedYear) ? selectedYear : availableYears[0];
@@ -36,26 +38,37 @@ const displayYear =
 // ---------------------------------------------------------------------------
 // Load scores for the selected year
 // ---------------------------------------------------------------------------
-const scoresPath = path.join(dataDir, `${displayYear}.json`);
-const scores: YearlyScores = JSON.parse(
-  fs.readFileSync(scoresPath, "utf-8")
-);
+let scores: YearlyScores | null = null;
+if (displayYear) {
+  const scoresPath = path.join(dataDir, `${displayYear}.json`);
+  if (fs.existsSync(scoresPath)) {
+    scores = JSON.parse(fs.readFileSync(scoresPath, "utf-8")) as YearlyScores;
+    // Ensure players are sorted by total score ascending (best score first)
+    scores.players.sort((a, b) => a.totalScore - b.totalScore);
+  }
+}
 
-// Ensure players are sorted by total score ascending (best score first)
-scores.players.sort((a, b) => a.totalScore - b.totalScore);
+const pageTitle = displayYear
+  ? `${config.league.name} – ${displayYear}`
+  : config.league.name;
+const headerYear = displayYear ?? config.league.currentYear;
 ---
 
-<Layout title={`${config.league.name} – ${displayYear}`}>
+<Layout title={pageTitle}>
   <Header
     years={availableYears}
-    currentYear={displayYear}
+    currentYear={headerYear}
   />
 
   <main>
-    <Leaderboard
-      client:load
-      scores={scores}
-      courses={config.courses}
-    />
+    {scores ? (
+      <Leaderboard
+        client:load
+        scores={scores}
+        courses={config.courses}
+      />
+    ) : (
+      <p class="p-8 text-center text-gray-500">No score data available yet. Run the fetch script to populate scores.</p>
+    )}
   </main>
 </Layout>
