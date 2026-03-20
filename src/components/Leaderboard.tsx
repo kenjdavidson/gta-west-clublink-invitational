@@ -14,8 +14,8 @@ export function Leaderboard({ scores, courses }: LeaderboardProps) {
   const { players } = scores;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
+    <div>
+      <div className="overflow-x-auto -mx-4 sm:-mx-6 lg:mx-0 lg:rounded-xl lg:shadow lg:ring-1 lg:ring-gray-200">
         <table className="min-w-full divide-y divide-gray-200 bg-white">
           <thead>
             <tr className="bg-green-900 text-white">
@@ -92,7 +92,7 @@ export function Leaderboard({ scores, courses }: LeaderboardProps) {
           </tbody>
         </table>
       </div>
-      <p className="mt-4 text-xs text-gray-400 text-right">
+      <p className="mt-4 px-4 sm:px-6 lg:px-0 text-xs text-gray-400 text-right">
         Last updated: {new Date(scores.generatedAt).toLocaleString()}
       </p>
     </div>
