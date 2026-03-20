@@ -70,7 +70,7 @@ export function Leaderboard({ scores, courses }: LeaderboardProps) {
           <tbody className="divide-y divide-gray-100">
             {players.map((player, index) => (
               <PlayerRow
-                key={player.member.memberNumber}
+                key={player.member.cardId}
                 rank={index + 1}
                 player={player}
                 courses={courses}
@@ -134,7 +134,7 @@ function PlayerRow({ rank, player, courses }: PlayerRowProps) {
       <td className="px-4 py-3 text-sm font-medium text-gray-900">
         {player.member.name}
         <span className="ml-2 text-xs text-gray-400 font-normal">
-          #{player.member.memberNumber}
+          #{player.member.cardId}
         </span>
       </td>
 
