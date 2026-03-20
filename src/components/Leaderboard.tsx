@@ -138,9 +138,6 @@ function PlayerRow({ rank, player, courses, year }: PlayerRowProps) {
         >
           {player.member.name}
         </a>
-        <span className="ml-2 text-xs text-gray-400 font-normal">
-          #{player.member.cardId}
-        </span>
       </td>
 
       {/* Best rounds per course */}

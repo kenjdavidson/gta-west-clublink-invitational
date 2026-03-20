@@ -54,7 +54,6 @@ export function PlayerRounds({ player, courses }: PlayerRoundsProps) {
       <h1 className="text-2xl font-bold text-gray-900 mb-1">
         {player.member.name}
       </h1>
-      <p className="text-sm text-gray-500 mb-6">Card #{player.member.cardId}</p>
 
       {player.rounds.length === 0 ? (
         <p className="text-gray-500 text-sm py-8 text-center">
