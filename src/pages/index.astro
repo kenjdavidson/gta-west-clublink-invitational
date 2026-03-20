@@ -1,0 +1,74 @@
+---
+import * as fs from "fs";
+import * as path from "path";
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import { Leaderboard } from "../components/Leaderboard";
+import type { LeagueConfig, YearlyScores } from "../types/index.js";
+
+// ---------------------------------------------------------------------------
+// Load league configuration
+// ---------------------------------------------------------------------------
+const configPath = path.join(process.cwd(), "config", "league.json");
+const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+
+// ---------------------------------------------------------------------------
+// Determine selected year (from query param or config default)
+// ---------------------------------------------------------------------------
+const requestedYear = Astro.url.searchParams.get("year");
+const selectedYear = requestedYear
+  ? Number(requestedYear)
+  : config.league.currentYear;
+
+// ---------------------------------------------------------------------------
+// Discover all years for which we have score data
+// ---------------------------------------------------------------------------
+const dataDir = path.join(process.cwd(), "src", "data");
+const availableYears: number[] = fs.existsSync(dataDir)
+  ? fs
+      .readdirSync(dataDir)
+      .filter((f) => /^\d{4}\.json$/.test(f))
+      .map((f) => Number(f.replace(".json", "")))
+      .sort((a, b) => b - a) // newest first
+  : [];
+
+const displayYear =
+  availableYears.includes(selectedYear) ? selectedYear : availableYears[0];
+
+// ---------------------------------------------------------------------------
+// Load scores for the selected year
+// ---------------------------------------------------------------------------
+let scores: YearlyScores | null = null;
+if (displayYear) {
+  const scoresPath = path.join(dataDir, `${displayYear}.json`);
+  if (fs.existsSync(scoresPath)) {
+    scores = JSON.parse(fs.readFileSync(scoresPath, "utf-8")) as YearlyScores;
+    // Ensure players are sorted by total score ascending (best score first)
+    scores.players.sort((a, b) => a.totalScore - b.totalScore);
+  }
+}
+
+const pageTitle = displayYear
+  ? `${config.league.name} – ${displayYear}`
+  : config.league.name;
+const headerYear = displayYear ?? config.league.currentYear;
+---
+
+<Layout title={pageTitle}>
+  <Header
+    years={availableYears}
+    currentYear={headerYear}
+  />
+
+  <main>
+    {scores ? (
+      <Leaderboard
+        client:load
+        scores={scores}
+        courses={config.courses}
+      />
+    ) : (
+      <p class="p-8 text-center text-gray-500">No score data available yet. Run the fetch script to populate scores.</p>
+    )}
+  </main>
+</Layout>
