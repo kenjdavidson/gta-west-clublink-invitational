@@ -1,7 +1,7 @@
 {
   "league": {
     "name": "GTA West Clublink League",
-    "currentYear": 2025
+    "currentYear": 2026
   },
   "members": [
     {
@@ -22,19 +22,45 @@
   ],
   "courses": [
     {
-      "name": "Weston Golf and Country Club",
-      "clubId": "18001",
-      "roundsCount": 3
+      "name": "Blue Springs Golf Club",
+      "clubId": "20599",
+      "roundsCount": 2,
+      "tee": "blue"
     },
     {
-      "name": "Pheasant Run Golf Club",
-      "clubId": "18002",
-      "roundsCount": 3
+      "name": "Glendale Golf Club",
+      "clubId": "20703",
+      "roundsCount": 2,
+      "tee": "blue"
     },
     {
-      "name": "Humber Valley Resort",
-      "clubId": "18003",
-      "roundsCount": 3
+      "name": "Georgetown Golf Club",
+      "clubId": "20697",
+      "roundsCount": 2,
+      "tee": "blue"
+    },
+    {
+      "name": "Greystone Golf Club",
+      "clubId": "20710",
+      "roundsCount": 1
+    },
+    {
+      "name": "Heron Point Golf Links",
+      "clubId": "20719",
+      "roundsCount": 1,
+      "tee": "blue"
+    },
+    {
+      "name": "RattleSnake Point Golf Club - Copperhead",
+      "clubId": "20859",
+      "roundsCount": 1,
+      "tee": "blue"
+    },
+    {
+      "name": "RattleSnake Point Golf Club - Sidewinder",
+      "clubId": "20858",
+      "roundsCount": 1,
+      "tee": "blue"
     }
   ]
 }
