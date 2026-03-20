@@ -5,19 +5,9 @@
   },
   "members": [
     {
-      "name": "Player One",
-      "memberNumber": "1000001",
-      "golfCanadaId": "GC1000001"
-    },
-    {
-      "name": "Player Two",
-      "memberNumber": "1000002",
-      "golfCanadaId": "GC1000002"
-    },
-    {
-      "name": "Player Three",
-      "memberNumber": "1000003",
-      "golfCanadaId": "GC1000003"
+      "name": "Ken Davidson",
+      "individualId": 1538533,
+      "cardId": "5200043264"
     }
   ],
   "courses": [

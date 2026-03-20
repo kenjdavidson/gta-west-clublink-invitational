@@ -1,7 +1,7 @@
 export interface Member {
   name: string;
-  memberNumber: string;
-  golfCanadaId: string;
+  individualId: number;
+  cardId: string;
 }
 
 export interface Course {
