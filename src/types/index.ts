@@ -8,6 +8,7 @@ export interface Course {
   name: string;
   clubId: string;
   roundsCount: number;
+  tee?: string;
 }
 
 export interface League {
@@ -25,6 +26,7 @@ export interface Round {
   date: string;
   courseId: string;
   courseName: string;
+  tee?: string;
   score: number;
   differential: number;
 }
