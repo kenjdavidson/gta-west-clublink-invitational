@@ -69,6 +69,7 @@ interface GolfCanadaRound {
   played_at: string;
   facility_id: string;
   facility_name: string;
+  tee_name?: string;
   adjusted_gross_score: number;
   score_differential: number;
 }
@@ -163,6 +164,7 @@ function buildPlayerScore(
     date: r.played_at,
     courseId: r.facility_id,
     courseName: r.facility_name,
+    tee: r.tee_name,
     score: r.adjusted_gross_score,
     differential: r.score_differential,
   }));
@@ -171,7 +173,12 @@ function buildPlayerScore(
   let totalScore = 0;
 
   for (const course of courses) {
-    const courseRounds = rounds.filter((r) => r.courseId === course.clubId);
+    const courseRounds = rounds.filter(
+      (r) =>
+        r.courseId === course.clubId &&
+        (!course.tee ||
+          r.tee?.toLowerCase() === course.tee.toLowerCase())
+    );
     const best = pickBestRounds(courseRounds, course.roundsCount);
     bestRoundsByCourse[course.clubId] = best;
     totalScore += best.reduce((sum, r) => sum + r.differential, 0);
