@@ -27,11 +27,17 @@ const base = import.meta.env.BASE_URL;
         </a>
       </div>
 
-      <!-- Right: Year selector -->
-      {
-        years.length > 1 && (
-          <nav class="flex items-center gap-2" aria-label="Year navigation">
-            {years.map((y) => (
+      <!-- Right: Navigation -->
+      <nav class="flex items-center gap-2" aria-label="Site navigation">
+        <a
+          href={`${base}rules`}
+          class="text-sm font-medium text-green-200 hover:bg-green-700 hover:text-white px-3 py-1.5 rounded-md transition-colors"
+        >
+          Rules
+        </a>
+        {
+          years.length > 1 && (
+            years.map((y) => (
               <a
                 href={`${base}${y}`}
                 class={`text-sm font-medium px-3 py-1.5 rounded-md transition-colors ${
@@ -42,17 +48,17 @@ const base = import.meta.env.BASE_URL;
               >
                 {y}
               </a>
-            ))}
-          </nav>
-        )
-      }
-      {
-        years.length === 1 && (
-          <a href={`${base}${currentYear}`} class="text-sm font-medium text-yellow-400 hover:text-yellow-200 transition-colors">
-            {currentYear}
-          </a>
-        )
-      }
+            ))
+          )
+        }
+        {
+          years.length === 1 && (
+            <a href={`${base}${currentYear}`} class="text-sm font-medium text-yellow-400 hover:text-yellow-200 transition-colors px-3 py-1.5 rounded-md">
+              {currentYear}
+            </a>
+          )
+        }
+      </nav>
     </div>
   </div>
 </header>

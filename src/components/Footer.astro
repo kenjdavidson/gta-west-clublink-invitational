@@ -1,0 +1,156 @@
+---
+interface Props {
+  years?: number[];
+  currentYear?: number;
+}
+
+const { years = [], currentYear } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const buildYear = new Date().getFullYear();
+---
+
+<footer class="bg-green-900 text-white border-t-4 border-yellow-500 mt-auto">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+
+      <!-- Column 1: Important Links -->
+      <div>
+        <h3 class="text-yellow-400 font-semibold text-sm uppercase tracking-wider mb-4">
+          Important Links
+        </h3>
+        <ul class="space-y-2 text-sm text-green-200">
+          <li>
+            <a
+              href={`${base}rules`}
+              class="hover:text-yellow-300 transition-colors"
+            >
+              Rules &amp; Format
+            </a>
+          </li>
+          <li>
+            <a
+              href="mailto:westgtaclinvitational@gmail.com"
+              class="hover:text-yellow-300 transition-colors"
+            >
+              Submit Scores
+            </a>
+          </li>
+          <li>
+            <a
+              href="mailto:westgtaclinvitational@gmail.com?subject=Entry%20Fee"
+              class="hover:text-yellow-300 transition-colors"
+            >
+              Entry Fee / Payment
+            </a>
+          </li>
+          <li class="text-green-400 text-xs pt-1">
+            Entry fee: $100 via e-transfer to<br />
+            westgtaclinvitational@gmail.com
+          </li>
+        </ul>
+      </div>
+
+      <!-- Column 2: Season Archives -->
+      <div>
+        <h3 class="text-yellow-400 font-semibold text-sm uppercase tracking-wider mb-4">
+          Seasons
+        </h3>
+        <ul class="space-y-2 text-sm">
+          {years.length > 0 ? (
+            years.map((y) => (
+              <li>
+                <a
+                  href={`${base}${y}`}
+                  class={`transition-colors ${
+                    y === currentYear
+                      ? "text-yellow-300 font-semibold"
+                      : "text-green-200 hover:text-yellow-300"
+                  }`}
+                >
+                  {y} Season
+                </a>
+              </li>
+            ))
+          ) : (
+            <li>
+              <a href={`${base}2026`} class="text-green-200 hover:text-yellow-300 transition-colors">
+                2026 Season
+              </a>
+            </li>
+          )}
+        </ul>
+      </div>
+
+      <!-- Column 3: Support / Developer Links -->
+      <div>
+        <h3 class="text-yellow-400 font-semibold text-sm uppercase tracking-wider mb-4">
+          Support
+        </h3>
+        <ul class="space-y-2 text-sm text-green-200">
+          <li>
+            <a
+              href="https://github.com/kenjdavidson/gta-west-clublink-invitational"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-yellow-300 transition-colors flex items-center gap-1.5"
+            >
+              <!-- GitHub icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 shrink-0">
+                <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.703-2.782.605-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.532 1.03 1.532 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0 1 12 6.844a9.57 9.57 0 0 1 2.504.337c1.909-1.294 2.748-1.025 2.748-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.337 4.687-4.565 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.742 0 .268.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" />
+              </svg>
+              GitHub Repository
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/kenjdavidson/gta-west-clublink-invitational/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-yellow-300 transition-colors"
+            >
+              Report an Issue
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/kenjdavidson/gta-west-clublink-invitational/pulls"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hover:text-yellow-300 transition-colors"
+            >
+              Pull Requests
+            </a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="border-t border-green-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-green-400">
+      <span>&copy; {buildYear} West GTA Clublink Men's Invitational. All rights reserved.</span>
+      <span>
+        Built with{" "}
+        <a
+          href="https://astro.build"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-yellow-300 transition-colors underline"
+        >
+          Astro
+        </a>
+        {" "}&amp;{" "}
+        <a
+          href="https://tailwindcss.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hover:text-yellow-300 transition-colors underline"
+        >
+          Tailwind CSS
+        </a>
+      </span>
+    </div>
+  </div>
+</footer>

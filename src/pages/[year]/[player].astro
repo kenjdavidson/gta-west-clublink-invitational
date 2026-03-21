@@ -39,7 +39,7 @@ const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
 const yearlyScores = await getYearlyScores(Number(year), config);
 ---
 
-<Layout title={`${player.member.name} – ${config.league.name} ${year}`}>
+<Layout title={`${player.member.name} – ${config.league.name} ${year}`} years={[Number(year)]} currentYear={Number(year)}>
   <Header years={[Number(year)]} currentYear={Number(year)} />
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
