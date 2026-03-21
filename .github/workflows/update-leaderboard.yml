@@ -1,0 +1,47 @@
+name: Update Leaderboard
+
+on:
+  schedule:
+    # ~2am EST Monday (EST=UTC-5 → 7am UTC; shifts to ~3am during EDT)
+    - cron: "0 7 * * 1"
+    # ~2am EST Friday (EST=UTC-5 → 7am UTC; shifts to ~3am during EDT)
+    - cron: "0 7 * * 5"
+  workflow_dispatch:
+
+# Allow one concurrent deployment; cancel any in-progress run
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # needed to push to gh-pages branch
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        env:
+          GOLFCANADA_USERNAME: ${{ secrets.GOLFCANADA_USERNAME }}
+          GOLFCANADA_PASSWORD: ${{ secrets.GOLFCANADA_PASSWORD }}
+        run: npm run build
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
