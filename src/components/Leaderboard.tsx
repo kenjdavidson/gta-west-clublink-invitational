@@ -11,7 +11,7 @@ function formatDifferential(value: number): string {
   return value.toFixed(1);
 }
 
-export function Leaderboard({ scores, courses, showNames = false }: LeaderboardProps) {
+export function Leaderboard({ scores, courses, showNames = true }: LeaderboardProps) {
   const { players } = scores;
 
   return (
