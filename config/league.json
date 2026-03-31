@@ -26,11 +26,6 @@
       "cardId": "6107922710"
     },
     {
-      "name": "Cameron Blake",
-      "individualId": 2867329,
-      "cardId": "6106941136"
-    },
-    {
       "name": "Jay Bondy",
       "individualId": 3209882,
       "cardId": "6109206641"
@@ -64,7 +59,15 @@
       "name": "Tom Winski",
       "individualId": 3138260,
       "cardId": "6108590572"
-    }
+    },
+    {
+      "individualId": 3181804,
+      "name": "Seventikidis, Chris",
+    },
+    {
+      "individualId": 3491861,
+      "name": "Taciuk, Mark",
+    },
   ],
   "courses": [
     {
