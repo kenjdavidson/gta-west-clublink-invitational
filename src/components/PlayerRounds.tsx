@@ -60,7 +60,7 @@ export function PlayerRounds({ player, courses }: PlayerRoundsProps) {
           No rounds recorded yet for this season.
         </p>
       ) : (
-        <div className="overflow-x-auto -mx-4 sm:-mx-6 lg:mx-0 lg:rounded-xl lg:shadow lg:ring-1 lg:ring-gray-200">
+        <div className="overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
           <table className="min-w-full divide-y divide-gray-200 bg-white">
             <thead>
               <tr className="bg-green-900 text-white">
@@ -113,7 +113,7 @@ export function PlayerRounds({ player, courses }: PlayerRoundsProps) {
           <h2 className="text-lg font-semibold text-gray-800 mb-3">
             Best Rounds (used in total)
           </h2>
-          <div className="overflow-x-auto -mx-4 sm:-mx-6 lg:mx-0 lg:rounded-xl lg:shadow lg:ring-1 lg:ring-gray-200">
+          <div className="overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
             <table className="min-w-full divide-y divide-gray-200 bg-white">
               <thead>
                 <tr className="bg-green-50 text-green-800 text-xs">
