@@ -99,7 +99,8 @@
     },
     {
       "name": "Kevin Spearing",
-      "individualId": 1582200
+      "individualId": 1582200,
+      "paid": true
     }
   ],
   "courses": [
