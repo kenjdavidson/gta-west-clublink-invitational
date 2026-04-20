@@ -1,13 +1,20 @@
 ---
 import * as fs from "fs";
 import * as path from "path";
-import Layout from "../../layouts/Layout.astro";
-import Header from "../../components/Header.astro";
-import type { LeagueConfig } from "../../types/index.js";
+import Layout from "../../../layouts/Layout.astro";
+import Header from "../../../components/Header.astro";
+import type { LeagueConfig } from "../../../types/index.js";
+
+export async function getStaticPaths() {
+  const configPath = path.join(process.cwd(), "config", "league.json");
+  const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+  return [{ params: { year: String(config.league.currentYear) } }];
+}
+
+const { year } = Astro.params;
 
 const configPath = path.join(process.cwd(), "config", "league.json");
 const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
-const { year } = { year: String(config.league.currentYear) };
 const githubRepo = config.league.githubRepo ?? "";
 
 const members = config.members.map((m) => ({ name: m.name, paid: m.paid ?? false }));
@@ -62,16 +69,17 @@ const members = config.members.map((m) => ({ name: m.name, paid: m.paid ?? false
       </div>
 
       {members.map((member) => (
-        <label class="flex items-center gap-3 cursor-pointer group">
+        <label class={`flex items-center gap-3 ${member.paid ? "cursor-not-allowed opacity-70" : "cursor-pointer group"}`}>
           <input
             type="checkbox"
             name="paid"
             value={member.name}
             checked={member.paid}
+            disabled={member.paid}
             data-original={String(member.paid)}
-            class="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer"
+            class={`w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500 ${member.paid ? "cursor-not-allowed" : "cursor-pointer"}`}
           />
-          <span class="text-sm text-gray-800 group-hover:text-green-800 transition-colors select-none">
+          <span class={`text-sm select-none ${member.paid ? "text-gray-500" : "text-gray-800 group-hover:text-green-800 transition-colors"}`}>
             {member.name}
           </span>
           {member.paid && (
@@ -121,40 +129,29 @@ const members = config.members.map((m) => ({ name: m.name, paid: m.paid ?? false
       return;
     }
 
-    const checkboxes = form.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
+    const checkboxes = form.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:not([disabled])');
 
     const nowPaid: string[] = [];
-    const nowUnpaid: string[] = [];
 
     checkboxes.forEach((cb) => {
       const wasOriginallyPaid = cb.dataset.original === "true";
       const isNowChecked = cb.checked;
       if (!wasOriginallyPaid && isNowChecked) {
         nowPaid.push(cb.value);
-      } else if (wasOriginallyPaid && !isNowChecked) {
-        nowUnpaid.push(cb.value);
       }
     });
 
-    if (nowPaid.length === 0 && nowUnpaid.length === 0) {
-      alert("No changes detected. Please check or uncheck members before submitting.");
+    if (nowPaid.length === 0) {
+      alert("No changes detected. Please check members who have paid before submitting.");
       return;
     }
 
     const lines: string[] = [];
     lines.push("## Payment Status Update\n");
 
-    if (nowPaid.length > 0) {
-      lines.push("### Newly Paid");
-      nowPaid.forEach((name) => lines.push(`- ${name}`));
-      lines.push("");
-    }
-
-    if (nowUnpaid.length > 0) {
-      lines.push("### Marked as Unpaid");
-      nowUnpaid.forEach((name) => lines.push(`- ${name}`));
-      lines.push("");
-    }
+    lines.push("### Newly Paid");
+    nowPaid.forEach((name) => lines.push(`- ${name}`));
+    lines.push("");
 
     const today = new Date().toLocaleDateString(DATE_LOCALE);
     lines.push(`_Submitted on ${today} by **${submitterName}** (${submitterEmail})_`);
