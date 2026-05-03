@@ -169,7 +169,14 @@ export async function getYearlyScores(
     }
   }
 
-  players.sort((a, b) => a.totalScore - b.totalScore);
+  // Sort by number of counting rounds descending (players with more rounds rank
+  // higher), then by total score ascending (lower differential total is better).
+  players.sort((a, b) => {
+    const roundsA = Object.values(a.bestRoundsByCourse).flat().length;
+    const roundsB = Object.values(b.bestRoundsByCourse).flat().length;
+    if (roundsB !== roundsA) return roundsB - roundsA;
+    return a.totalScore - b.totalScore;
+  });
 
   const result: YearlyScores = {
     year,
