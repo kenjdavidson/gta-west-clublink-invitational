@@ -32,6 +32,7 @@ export interface Round {
   tee?: string;
   score: number;
   differential: number;
+  holes: string;
 }
 
 export interface PlayerScore {
