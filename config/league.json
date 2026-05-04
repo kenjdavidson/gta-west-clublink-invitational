@@ -15,7 +15,8 @@
     {
       "name": "Steve Atrill",
       "individualId": 3181518,
-      "cardId": "6108967190"
+      "cardId": "6108967190",
+      "paid": true
     },
     {
       "name": "David Belletrutti",
@@ -67,7 +68,8 @@
     },
     {
       "name": "Chris Seventikidis",
-      "individualId": 3181804      
+      "individualId": 3181804,
+      "paid": true
     },
     {
       "name": "Mark Taciuk",
