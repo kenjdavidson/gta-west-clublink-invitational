@@ -25,7 +25,7 @@ export interface GolfCanadaLoginResponse {
 export interface GolfCanadaScoreHistory {
   id: number;
   date: string;
-  course: string;
+  course: string | null;
   adjustedDifferential: number;
   adjustment: number;
   adjustments: unknown[];

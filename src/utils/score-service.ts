@@ -22,8 +22,8 @@ const _cache = new Map<number, YearlyScores>();
 /** Default number of bonus rounds to count when not specified in config. */
 const DEFAULT_BONUS_ROUNDS_COUNT = 3;
 
-/** Hole count value used by Golf Canada to identify 9-hole rounds. */
-const NINE_HOLE_ROUND = "9";
+/** Hole count value used by Golf Canada to identify 18-hole rounds. */
+const EIGHTEEN_HOLE_ROUND = "18";
 
 // ---------------------------------------------------------------------------
 // Private helpers
@@ -44,8 +44,10 @@ function normalise(s: string): string {
 /**
  * Returns true when the Golf Canada course name is a plausible match for a
  * configured league course name. Both strings are normalised before comparison.
+ * Returns false when either name is null or empty.
  */
-function courseNameMatches(gcName: string, leagueName: string): boolean {
+function courseNameMatches(gcName: string | null, leagueName: string): boolean {
+  if (!gcName) return false;
   const gc = normalise(gcName);
   const lg = normalise(leagueName);
   return gc.includes(lg) || lg.includes(gc);
@@ -96,7 +98,7 @@ function buildPlayerScore(
   for (const course of config.courses) {
     if (course.roundsCount > 0) {
       const courseRounds = rounds
-        .filter((r) => r.courseId === course.clubId && r.holes !== NINE_HOLE_ROUND)
+        .filter((r) => r.courseId === course.clubId && r.holes === EIGHTEEN_HOLE_ROUND)
         .sort((a, b) => a.differential - b.differential)
         .slice(0, course.roundsCount);
 
@@ -111,7 +113,7 @@ function buildPlayerScore(
   // top N bonus rounds (lowest differential first).
   const bonusCount = config.league.bonusRoundsCount ?? DEFAULT_BONUS_ROUNDS_COUNT;
   const bonusRounds = rounds
-    .filter((r) => !usedRounds.has(r) && r.holes !== NINE_HOLE_ROUND)
+    .filter((r) => !usedRounds.has(r) && r.holes === EIGHTEEN_HOLE_ROUND)
     .sort((a, b) => a.differential - b.differential)
     .slice(0, bonusCount);
 
