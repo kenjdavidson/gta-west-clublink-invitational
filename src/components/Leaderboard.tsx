@@ -80,7 +80,7 @@ export function Leaderboard({ scores, courses, showNames = true }: LeaderboardPr
       {/* ── Desktop table (hidden on mobile, visible on md+) ── */}
       <div className="hidden md:block overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
         <table
-          className="min-w-full divide-y divide-gray-200 bg-white"
+          className="w-full divide-y divide-gray-200 bg-white"
           style={{ tableLayout: "fixed" }}
         >
           <colgroup>
