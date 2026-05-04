@@ -88,11 +88,12 @@ function buildPlayerScore(
   console.log(`[score-service]   Processing ${yearScores.length} score(s) for ${member.name}`);
 
   let nullCourseCount = 0;
-  let matchedCount = 0;
+  let directMatchCount = 0;
   let homeClubFallbackCount = 0;
 
   for (const score of yearScores) {
-    let matched = false;
+    // Try to match by course name first.
+    let resolved = false;
 
     for (const course of config.courses) {
       if (courseNameMatches(score.course, course.name)) {
@@ -106,53 +107,53 @@ function buildPlayerScore(
           holes: score.holes,
         });
         console.log(`[score-service]     ✓ Matched round ${score.date} (${score.holes} holes) → "${course.name}" (differential: ${score.adjustedDifferential})`);
-        matched = true;
-        matchedCount++;
+        directMatchCount++;
+        resolved = true;
         break; // matched — stop checking other courses
       }
     }
 
-    if (!matched) {
-      if (!score.course) {
-        nullCourseCount++;
-        // Fallback: if the score was posted at the member's home club (type "H")
-        // and the member has homeClubId configured, attribute it to that course.
-        if (score.type === HOME_SCORE_TYPE && member.homeClubId) {
-          const homeCourse = config.courses.find((c) => c.clubId === member.homeClubId);
-          if (homeCourse) {
-            rounds.push({
-              date: score.date,
-              courseId: homeCourse.clubId,
-              courseName: homeCourse.name,
-              tee: score.tee,
-              score: score.score,
-              differential: score.adjustedDifferential,
-              holes: score.holes,
-            });
-            console.log(`[score-service]     ↩ Home-club fallback for round ${score.date} (${score.holes} holes, type=${score.type}) → "${homeCourse.name}" (differential: ${score.adjustedDifferential})`);
-            matched = true;
-            homeClubFallbackCount++;
-          } else {
-            console.warn(`[score-service]     ⚠ Home-club fallback: homeClubId="${member.homeClubId}" not found in course config for ${member.name}`);
-          }
+    if (resolved) continue;
+
+    // Course name was not matched. Check if course is null.
+    if (!score.course) {
+      nullCourseCount++;
+      // Fallback: if the score was posted at the member's home club (type "H")
+      // and the member has homeClubId configured, attribute it to that course.
+      if (score.type === HOME_SCORE_TYPE && member.homeClubId) {
+        const homeCourse = config.courses.find((c) => c.clubId === member.homeClubId);
+        if (homeCourse) {
+          rounds.push({
+            date: score.date,
+            courseId: homeCourse.clubId,
+            courseName: homeCourse.name,
+            tee: score.tee,
+            score: score.score,
+            differential: score.adjustedDifferential,
+            holes: score.holes,
+          });
+          console.log(`[score-service]     ↩ Home-club fallback for round ${score.date} (${score.holes} holes, type=${score.type}) → "${homeCourse.name}" (differential: ${score.adjustedDifferential})`);
+          homeClubFallbackCount++;
         } else {
-          console.log(`[score-service]     ✗ Skipped round ${score.date} (${score.holes} holes, type=${score.type}) — course is null and no home-club fallback applies`);
+          console.warn(`[score-service]     ⚠ Home-club fallback: homeClubId="${member.homeClubId}" not found in course config for ${member.name}`);
         }
       } else {
-        console.log(`[score-service]     ✗ Skipped round ${score.date} (${score.holes} holes) at "${score.course}" — no matching league course found`);
+        console.log(`[score-service]     ✗ Skipped round ${score.date} (${score.holes} holes, type=${score.type}) — course is null and no home-club fallback applies`);
       }
+    } else {
+      console.log(`[score-service]     ✗ Skipped round ${score.date} (${score.holes} holes) at "${score.course}" — no matching league course found`);
     }
   }
 
-  if (nullCourseCount > 0) {
+  const unresolvedNullCount = nullCourseCount - homeClubFallbackCount;
+  if (unresolvedNullCount > 0) {
     console.warn(
-      `[score-service]   ⚠ ${member.name} has ${nullCourseCount} score(s) where the Golf Canada API returned course=null. ` +
-      `Home-club fallback resolved ${homeClubFallbackCount} of them. ` +
+      `[score-service]   ⚠ ${member.name} has ${unresolvedNullCount} unresolved score(s) where the Golf Canada API returned course=null. ` +
       `Check the member's Golf Canada privacy/account settings or add a homeClubId to their config entry.`
     );
   }
 
-  console.log(`[score-service]   → ${matchedCount + homeClubFallbackCount} round(s) matched to league courses (${homeClubFallbackCount} via home-club fallback)`);
+  console.log(`[score-service]   → ${directMatchCount + homeClubFallbackCount} round(s) matched to league courses (${homeClubFallbackCount} via home-club fallback)`);
 
   // Phase 1: For each course with a required round count (roundsCount > 0),
   // select the N best rounds (lowest differential first).
