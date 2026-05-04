@@ -25,6 +25,12 @@ const DEFAULT_BONUS_ROUNDS_COUNT = 3;
 /** Hole count value used by Golf Canada to identify 18-hole rounds. */
 const EIGHTEEN_HOLE_ROUND = "18";
 
+/**
+ * Golf Canada score type indicating the round was played at the member's home
+ * club. Used as a fallback when the API omits the course name (`course: null`).
+ */
+const HOME_SCORE_TYPE = "H";
+
 // ---------------------------------------------------------------------------
 // Private helpers
 // ---------------------------------------------------------------------------
@@ -65,6 +71,12 @@ function filterByYear(
 
 /**
  * Builds a PlayerScore from a member's Golf Canada history for the given year.
+ *
+ * When the Golf Canada API returns `course: null` for a score (which can
+ * happen for certain account configurations), course-name matching is skipped
+ * for that round. However, if the score has `type === "H"` (home-club score)
+ * **and** the member has `homeClubId` configured, the round is attributed to
+ * the member's home course as a fallback.
  */
 function buildPlayerScore(
   member: Member,
@@ -73,7 +85,15 @@ function buildPlayerScore(
 ): PlayerScore {
   const rounds: Round[] = [];
 
+  console.log(`[score-service]   Processing ${yearScores.length} score(s) for ${member.name}`);
+
+  let nullCourseCount = 0;
+  let matchedCount = 0;
+  let homeClubFallbackCount = 0;
+
   for (const score of yearScores) {
+    let matched = false;
+
     for (const course of config.courses) {
       if (courseNameMatches(score.course, course.name)) {
         rounds.push({
@@ -85,10 +105,54 @@ function buildPlayerScore(
           differential: score.adjustedDifferential,
           holes: score.holes,
         });
+        console.log(`[score-service]     ✓ Matched round ${score.date} (${score.holes} holes) → "${course.name}" (differential: ${score.adjustedDifferential})`);
+        matched = true;
+        matchedCount++;
         break; // matched — stop checking other courses
       }
     }
+
+    if (!matched) {
+      if (!score.course) {
+        nullCourseCount++;
+        // Fallback: if the score was posted at the member's home club (type "H")
+        // and the member has homeClubId configured, attribute it to that course.
+        if (score.type === HOME_SCORE_TYPE && member.homeClubId) {
+          const homeCourse = config.courses.find((c) => c.clubId === member.homeClubId);
+          if (homeCourse) {
+            rounds.push({
+              date: score.date,
+              courseId: homeCourse.clubId,
+              courseName: homeCourse.name,
+              tee: score.tee,
+              score: score.score,
+              differential: score.adjustedDifferential,
+              holes: score.holes,
+            });
+            console.log(`[score-service]     ↩ Home-club fallback for round ${score.date} (${score.holes} holes, type=${score.type}) → "${homeCourse.name}" (differential: ${score.adjustedDifferential})`);
+            matched = true;
+            homeClubFallbackCount++;
+          } else {
+            console.warn(`[score-service]     ⚠ Home-club fallback: homeClubId="${member.homeClubId}" not found in course config for ${member.name}`);
+          }
+        } else {
+          console.log(`[score-service]     ✗ Skipped round ${score.date} (${score.holes} holes, type=${score.type}) — course is null and no home-club fallback applies`);
+        }
+      } else {
+        console.log(`[score-service]     ✗ Skipped round ${score.date} (${score.holes} holes) at "${score.course}" — no matching league course found`);
+      }
+    }
   }
+
+  if (nullCourseCount > 0) {
+    console.warn(
+      `[score-service]   ⚠ ${member.name} has ${nullCourseCount} score(s) where the Golf Canada API returned course=null. ` +
+      `Home-club fallback resolved ${homeClubFallbackCount} of them. ` +
+      `Check the member's Golf Canada privacy/account settings or add a homeClubId to their config entry.`
+    );
+  }
+
+  console.log(`[score-service]   → ${matchedCount + homeClubFallbackCount} round(s) matched to league courses (${homeClubFallbackCount} via home-club fallback)`);
 
   // Phase 1: For each course with a required round count (roundsCount > 0),
   // select the N best rounds (lowest differential first).
@@ -132,6 +196,9 @@ function buildPlayerScore(
         .reduce((sum, r) => sum + r.differential, 0) * 10
     ) / 10;
 
+  const countingRounds = Object.values(bestRoundsByCourse).flat().length;
+  console.log(`[score-service]   → ${countingRounds} counting round(s) selected, total score: ${totalScore}`);
+
   return { member, rounds, bestRoundsByCourse, totalScore };
 }
 
@@ -156,12 +223,16 @@ export async function getYearlyScores(
     return _cache.get(year)!;
   }
 
+  console.log(`[score-service] Building leaderboard for year ${year} — ${config.members.length} member(s), ${config.courses.length} course(s)`);
+
   const players: PlayerScore[] = [];
 
   for (const member of config.members) {
+    console.log(`[score-service] Fetching scores for ${member.name} (individualId: ${member.individualId})…`);
     try {
       const history = await getHistory(member.individualId);
       const yearScores = filterByYear(history, year);
+      console.log(`[score-service]   ${history.length} total record(s) → ${yearScores.length} in ${year}`);
       players.push(buildPlayerScore(member, yearScores, config));
     } catch (err) {
       // Member is included with empty scores on API failure so they still
@@ -179,6 +250,8 @@ export async function getYearlyScores(
     if (roundsB !== roundsA) return roundsB - roundsA;
     return a.totalScore - b.totalScore;
   });
+
+  console.log(`[score-service] Leaderboard for ${year} built successfully`);
 
   const result: YearlyScores = {
     year,

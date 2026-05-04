@@ -3,6 +3,14 @@ export interface Member {
   individualId: number;
   cardId?: string;
   paid?: boolean;
+  /**
+   * Optional Golf Canada club ID for the member's home course.
+   * Used as a fallback when the Golf Canada API returns `course: null` for
+   * a score that has `type === "H"` (home-club score). This allows home-club
+   * rounds to be matched to the correct league course even when the API omits
+   * the course name.
+   */
+  homeClubId?: string;
 }
 
 export interface Course {

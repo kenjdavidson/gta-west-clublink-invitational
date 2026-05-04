@@ -80,6 +80,8 @@ export async function login(): Promise<GolfCanadaLoginResponse> {
     throw new Error('GOLFCANADA_USERNAME and GOLFCANADA_PASSWORD environment variables must be set');
   }
 
+  console.log('[golf-canada] Authenticating with Golf Canada API…');
+
   const body = new URLSearchParams({
     grant_type: 'password',
     username,
@@ -103,6 +105,7 @@ export async function login(): Promise<GolfCanadaLoginResponse> {
   }
 
   _cachedLogin = data as unknown as GolfCanadaLoginResponse;
+  console.log('[golf-canada] Authentication successful');
   return _cachedLogin;
 }
 
@@ -118,6 +121,8 @@ export async function getHistory(individualId: number): Promise<GolfCanadaScoreH
   const loginData = await login();
   const url = `${API_BASE}/scores/getHistory?$skip=0&$top=100&individualId=${individualId}`;
 
+  console.log(`[golf-canada] Fetching score history for individualId=${individualId}`);
+
   const response = await fetch(url, {
     headers: { Authorization: `Bearer ${loginData.access_token}` },
   });
@@ -127,5 +132,6 @@ export async function getHistory(individualId: number): Promise<GolfCanadaScoreH
   }
 
   const json = (await response.json()) as { data: GolfCanadaScoreHistory[] };
+  console.log(`[golf-canada] Received ${json.data.length} score records for individualId=${individualId}`);
   return json.data;
 }
