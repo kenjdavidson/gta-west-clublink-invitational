@@ -157,7 +157,7 @@ export function PlayerRounds({ player, courses }: PlayerRoundsProps) {
             </table>
           </div>
           <p className="mt-2 text-sm font-semibold text-green-800 text-right">
-            Total: {player.totalScore > 0 ? player.totalScore.toFixed(1) : "–"}
+            Total: {player.totalScore > 0 ? player.totalScore : "–"}
           </p>
         </div>
       )}

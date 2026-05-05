@@ -7,8 +7,8 @@ interface LeaderboardProps {
   showNames?: boolean;
 }
 
-function formatDifferential(value: number): string {
-  return value.toFixed(1);
+function formatScore(value: number): string {
+  return String(value);
 }
 
 /**
@@ -262,7 +262,7 @@ function PlayerRow({ rank, player, courses, effectiveColsMap, year, showNames, t
         style={{ left: totalColLeft }}
       >
         {player.totalScore > 0
-          ? formatDifferential(player.totalScore)
+          ? formatScore(player.totalScore)
           : "–"}
       </td>
 
@@ -280,7 +280,7 @@ function PlayerRow({ rank, player, courses, effectiveColsMap, year, showNames, t
               } ${round ? "text-gray-700" : "text-gray-300"}`}
               title={round ? `${round.courseName} – ${round.date}` : undefined}
             >
-              {round ? formatDifferential(round.differential) : "–"}
+              {round ? round.score : "–"}
             </td>
           );
         });
@@ -343,7 +343,7 @@ function MobilePlayerCard({ rank, player, courses, year }: MobilePlayerCardProps
           </div>
         </div>
         <span className="text-sm font-semibold text-yellow-700 tabular-nums">
-          {player.totalScore > 0 ? formatDifferential(player.totalScore) : "–"}
+          {player.totalScore > 0 ? formatScore(player.totalScore) : "–"}
         </span>
       </div>
 
@@ -375,7 +375,7 @@ function MobilePlayerCard({ rank, player, courses, year }: MobilePlayerCardProps
                       }
                       title={`${round.courseName} – ${round.date}`}
                     >
-                      R{i + 1}: {formatDifferential(round.differential)}
+                      R{i + 1}: {round.score}
                     </span>
                   ))}
                 </div>
