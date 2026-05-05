@@ -1,27 +1,23 @@
 ---
-import * as fs from "fs";
-import * as path from "path";
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
-import type { LeagueConfig } from "../../types/index.js";
+import { loadConfig, getConfiguredYears } from "../../utils/config-loader.js";
 
 export async function getStaticPaths() {
-  const configPath = path.join(process.cwd(), "config", "league.json");
-  const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
-  return [{ params: { year: String(config.league.currentYear) } }];
+  return getConfiguredYears().map((year) => ({ params: { year: String(year) } }));
 }
 
 const { year } = Astro.params;
+const allYears = getConfiguredYears();
 
-const configPath = path.join(process.cwd(), "config", "league.json");
-const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+const config = loadConfig(Number(year));
 
 const paid = config.members.filter((m) => m.paid);
 const unpaid = config.members.filter((m) => !m.paid);
 ---
 
-<Layout title={`Dues – ${config.league.name} ${year}`} years={[Number(year)]} currentYear={Number(year)}>
-  <Header years={[Number(year)]} currentYear={Number(year)} leagueName={config.league.name} />
+<Layout title={`Dues – ${config.league.name} ${year}`} years={allYears} currentYear={Number(year)}>
+  <Header years={allYears} currentYear={Number(year)} leagueName={config.league.name} />
 
   <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1">
 

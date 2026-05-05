@@ -25,6 +25,28 @@ export interface LeagueConfig {
   courses: Course[];
 }
 
+/**
+ * Site-level configuration stored in `config/site.json`.
+ * Contains information that applies across all seasons.
+ */
+export interface SiteConfig {
+  league: {
+    name: string;
+    currentYear: number;
+    githubRepo?: string;
+  };
+}
+
+/**
+ * Year-specific configuration stored in `config/{year}/config.json`.
+ * Contains members, courses, and scoring rules for a single season.
+ */
+export interface YearConfig {
+  members: Member[];
+  courses: Course[];
+  bonusRoundsCount?: number;
+}
+
 export interface Round {
   date: string;
   courseId: string;

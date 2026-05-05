@@ -1,17 +1,15 @@
 ---
-import * as fs from "fs";
-import * as path from "path";
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
-import type { LeagueConfig } from "../types/index.js";
+import { loadConfig, getConfiguredYears } from "../utils/config-loader.js";
 
-const configPath = path.join(process.cwd(), "config", "league.json");
-const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+const allYears = getConfiguredYears();
+const config = loadConfig();
 const { currentYear } = config.league;
 ---
 
-<Layout title={`Rules – ${config.league.name}`} years={[currentYear]} currentYear={currentYear}>
-  <Header years={[currentYear]} currentYear={currentYear} leagueName={config.league.name} />
+<Layout title={`Rules – ${config.league.name}`} years={allYears} currentYear={currentYear}>
+  <Header years={allYears} currentYear={currentYear} leagueName={config.league.name} />
 
   <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1">
 

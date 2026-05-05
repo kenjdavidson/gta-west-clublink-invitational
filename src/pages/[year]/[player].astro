@@ -1,10 +1,9 @@
 ---
-import * as fs from "fs";
-import * as path from "path";
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import { PlayerRounds } from "../../components/PlayerRounds";
-import type { LeagueConfig, PlayerScore } from "../../types/index.js";
+import type { PlayerScore } from "../../types/index.js";
+import { loadConfig, getConfiguredYears } from "../../utils/config-loader.js";
 import { getYearlyScores } from "../../utils/score-service.js";
 import { toSlug } from "../../utils/slug.js";
 
@@ -13,16 +12,18 @@ import { toSlug } from "../../utils/slug.js";
 // ---------------------------------------------------------------------------
 
 export async function getStaticPaths() {
-  const configPath = path.join(process.cwd(), "config", "league.json");
-  const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
-
-  const year = config.league.currentYear;
-  const scores = await getYearlyScores(year, config);
-
-  return scores.players.map((playerScore) => ({
-    params: { year: String(year), player: toSlug(playerScore.member.name) },
-    props: { player: playerScore },
-  }));
+  const paths = [];
+  for (const year of getConfiguredYears()) {
+    const config = loadConfig(year);
+    const scores = await getYearlyScores(year, config);
+    for (const playerScore of scores.players) {
+      paths.push({
+        params: { year: String(year), player: toSlug(playerScore.member.name) },
+        props: { player: playerScore },
+      });
+    }
+  }
+  return paths;
 }
 
 // ---------------------------------------------------------------------------
@@ -32,15 +33,15 @@ export async function getStaticPaths() {
 const { year, player: playerSlug } = Astro.params;
 const { player } = Astro.props as { player: PlayerScore };
 
-const configPath = path.join(process.cwd(), "config", "league.json");
-const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+const allYears = getConfiguredYears();
+const config = loadConfig(Number(year));
 
 // Re-use the cached result — score-service ensures no duplicate API calls
 const yearlyScores = await getYearlyScores(Number(year), config);
 ---
 
-<Layout title={`${player.member.name} – ${config.league.name} ${year}`} years={[Number(year)]} currentYear={Number(year)}>
-  <Header years={[Number(year)]} currentYear={Number(year)} />
+<Layout title={`${player.member.name} – ${config.league.name} ${year}`} years={allYears} currentYear={Number(year)}>
+  <Header years={allYears} currentYear={Number(year)} />
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="flex flex-col-reverse gap-6 lg:flex-row">
