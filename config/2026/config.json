@@ -1,0 +1,177 @@
+{
+  "bonusRoundsCount": 3,
+  "members": [
+    {
+      "name": "Ken Davidson",
+      "individualId": 1538533,
+      "cardId": "5200043264",
+      "paid": true
+    },
+    {
+      "name": "Steve Atrill",
+      "individualId": 3181518,
+      "cardId": "6108967190",
+      "paid": true
+    },
+    {
+      "name": "David Belletrutti",
+      "individualId": 2762078,
+      "cardId": "6106468437",
+      "paid": true
+    },
+    {
+      "name": "Ian Bennett",
+      "individualId": 3056750,
+      "cardId": "6107922710"
+    },
+    {
+      "name": "Jay Bondy",
+      "individualId": 3209882,
+      "cardId": "6109206641"
+    },
+    {
+      "name": "Gary Dephoure",
+      "individualId": 3087822,
+      "cardId": "6108121192",
+      "paid": true
+    },
+    {
+      "name": "Sean Donovan",
+      "individualId": 3199234,
+      "cardId": "6109108591",
+      "paid": true
+    },
+    {
+      "name": "Dean Ellis",
+      "individualId": 2825283,
+      "cardId": "6106775913",
+      "paid": true
+    },
+    {
+      "name": "Chris Sandilands",
+      "individualId": 2603527,
+      "cardId": "6105799767",
+      "paid": true
+    },
+    {
+      "name": "Dennis Stacey",
+      "individualId": 3083319,
+      "cardId": "6108081940"
+    },
+    {
+      "name": "Tom Winski",
+      "individualId": 3138260,
+      "cardId": "6108590572",
+      "paid": true
+    },
+    {
+      "name": "Chris Seventikidis",
+      "individualId": 3181804,
+      "paid": true
+    },
+    {
+      "name": "Mark Taciuk",
+      "individualId": 3491861,
+      "paid": true
+    },
+    {
+      "name": "Barry Morgan",
+      "individualId": 3071521
+    },
+    {
+      "name": "Glenn Veary",
+      "individualId": 3073253,
+      "paid": true
+    },
+    {
+      "name": "Irfan Ismail",
+      "individualId": 3233494
+    },
+    {
+      "name": "Ryan Leal",
+      "individualId": 3090704,
+      "paid": true
+    },
+    {
+      "name": "Adam Gillespie",
+      "individualId": 3085429
+    },
+    {
+      "name": "Chris Redpath",
+      "individualId": 2854643,
+      "paid": true
+    },
+    {
+      "name": "Kevin Spearing",
+      "individualId": 1582200,
+      "paid": true
+    }
+  ],
+  "courses": [
+    {
+      "name": "Blue Springs Golf Club",
+      "clubId": "20599",
+      "roundsCount": 1
+    },
+    {
+      "name": "Glendale Golf Club",
+      "clubId": "20703",
+      "roundsCount": 1
+    },
+    {
+      "name": "Georgetown Golf Club",
+      "clubId": "20697",
+      "roundsCount": 1
+    },
+    {
+      "name": "Greystone Golf Club",
+      "clubId": "20710",
+      "roundsCount": 1
+    },
+    {
+      "name": "Heron Point Golf Links",
+      "clubId": "20719",
+      "roundsCount": 1
+    },
+    {
+      "name": "RattleSnake Point Golf Club - Copperhead",
+      "clubId": "20859",
+      "roundsCount": 1
+    },
+    {
+      "name": "RattleSnake Point Golf Club - Sidewinder",
+      "clubId": "20858",
+      "roundsCount": 1
+    },
+    {
+      "name": "Hidden Lake Golf Club - New Course",
+      "clubId": "20722",
+      "roundsCount": 0
+    },
+    {
+      "name": "Hidden Lake Golf Club - Old Course",
+      "clubId": "20721",
+      "roundsCount": 0
+    },
+    {
+      "name": "Glen Abbey Golf Club",
+      "clubId": "20699",
+      "roundsCount": 0
+    },
+    {
+      "name": "Glencairn Golf Club - Leithfield-Speyside",
+      "clubId": "20056",
+      "roundsCount": 0
+    },
+    {
+      "name": "Glencairn Golf Club - Scotch Block-Leithfield",
+      "clubId": "20057",
+      "roundsCount": 0
+    },
+    {
+      "name": "Glencairn Golf Club - Speyside-Scotch Block",
+      "clubId": "20058",
+      "roundsCount": 0
+    }
+  ]
+}

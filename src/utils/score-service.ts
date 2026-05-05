@@ -7,9 +7,14 @@
  *
  * Results are cached by year so that multiple Astro pages built in the same
  * process do not trigger redundant API calls.
+ *
+ * For completed seasons a pre-computed `config/{year}/results.json` file can
+ * be placed in the repository. When present, the score service loads from that
+ * file instead of making any Golf Canada API calls.
  */
 
 import { getHistory } from "../service/golf-canada.js";
+import { loadYearlyResults } from "./config-loader.js";
 import type { LeagueConfig, Member, PlayerScore, Round, YearlyScores } from "../types/index.js";
 import type { GolfCanadaScoreHistory } from "../service/golf-canada.js";
 
@@ -196,6 +201,17 @@ export async function getYearlyScores(
 ): Promise<YearlyScores> {
   if (_cache.has(year)) {
     return _cache.get(year)!;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Completed-season short-circuit: if a pre-computed results file exists for
+  // this year, load it directly without making any Golf Canada API calls.
+  // ---------------------------------------------------------------------------
+  const staticResults = loadYearlyResults(year);
+  if (staticResults) {
+    console.log(`[score-service] Loading static results for ${year} from config/${year}/results.json`);
+    _cache.set(year, staticResults);
+    return staticResults;
   }
 
   console.log(`[score-service] Building leaderboard for year ${year} — ${config.members.length} member(s), ${config.courses.length} course(s)`);

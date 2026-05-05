@@ -1,17 +1,15 @@
 ---
-import * as fs from "fs";
-import * as path from "path";
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import { Leaderboard } from "../components/Leaderboard";
-import type { LeagueConfig } from "../types/index.js";
+import { loadConfig, getConfiguredYears } from "../utils/config-loader.js";
 import { getYearlyScores } from "../utils/score-service.js";
 
 // ---------------------------------------------------------------------------
 // Load league configuration
 // ---------------------------------------------------------------------------
-const configPath = path.join(process.cwd(), "config", "league.json");
-const config: LeagueConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+const allYears = getConfiguredYears();
+const config = loadConfig();
 
 const { currentYear } = config.league;
 
@@ -23,8 +21,8 @@ const scores = await getYearlyScores(currentYear, config);
 const pageTitle = `${config.league.name} – ${currentYear}`;
 ---
 
-<Layout title={pageTitle} years={[currentYear]} currentYear={currentYear}>
-  <Header years={[currentYear]} currentYear={currentYear} leagueName={config.league.name} />
+<Layout title={pageTitle} years={allYears} currentYear={currentYear}>
+  <Header years={allYears} currentYear={currentYear} leagueName={config.league.name} />
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     {scores.players.length > 0 ? (
