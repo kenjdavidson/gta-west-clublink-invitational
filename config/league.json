@@ -103,7 +103,8 @@
     },
     {
       "name": "Chris Redpath",
-      "individualId": 2854643
+      "individualId": 2854643,
+      "paid": true
     },
     {
       "name": "Kevin Spearing",
