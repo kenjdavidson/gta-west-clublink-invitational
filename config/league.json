@@ -21,7 +21,8 @@
     {
       "name": "David Belletrutti",
       "individualId": 2762078,
-      "cardId": "6106468437"
+      "cardId": "6106468437",
+      "paid": true
     },
     {
       "name": "Ian Bennett",
@@ -54,7 +55,8 @@
     {
       "name": "Chris Sandilands",
       "individualId": 2603527,
-      "cardId": "6105799767"
+      "cardId": "6105799767",
+      "paid": true
     },
     {
       "name": "Dennis Stacey",
@@ -64,7 +66,8 @@
     {
       "name": "Tom Winski",
       "individualId": 3138260,
-      "cardId": "6108590572"
+      "cardId": "6108590572",
+      "paid": true
     },
     {
       "name": "Chris Seventikidis",
@@ -82,7 +85,8 @@
     },
     {
       "name": "Glenn Veary",
-      "individualId": 3073253
+      "individualId": 3073253,
+      "paid": true
     },
     {
       "name": "Irfan Ismail",
@@ -90,7 +94,8 @@
     },
     {
       "name": "Ryan Leal",
-      "individualId": 3090704
+      "individualId": 3090704,
+      "paid": true
     },
     {
       "name": "Adam Gillespie",
