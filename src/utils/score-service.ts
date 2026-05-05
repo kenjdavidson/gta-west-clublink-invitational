@@ -133,7 +133,7 @@ function buildPlayerScore(
   console.log(`[score-service]   → ${directMatchCount} round(s) matched to league courses`);
 
   // Phase 1: For each course with a required round count (roundsCount > 0),
-  // select the N best rounds (lowest differential first).
+  // select the N best rounds (lowest gross score first).
   const bestRoundsByCourse: Record<string, Round[]> = {};
   const usedRounds = new Set<Round>();
 
@@ -141,7 +141,7 @@ function buildPlayerScore(
     if (course.roundsCount > 0) {
       const courseRounds = rounds
         .filter((r) => r.courseId === course.clubId && r.holes === EIGHTEEN_HOLE_ROUND)
-        .sort((a, b) => a.differential - b.differential)
+        .sort((a, b) => a.score - b.score)
         .slice(0, course.roundsCount);
 
       if (courseRounds.length > 0) {
@@ -152,11 +152,11 @@ function buildPlayerScore(
   }
 
   // Phase 2: From the remaining (unused) rounds across all courses, take the
-  // top N bonus rounds (lowest differential first).
+  // top N bonus rounds (lowest gross score first).
   const bonusCount = config.league.bonusRoundsCount ?? DEFAULT_BONUS_ROUNDS_COUNT;
   const bonusRounds = rounds
     .filter((r) => !usedRounds.has(r) && r.holes === EIGHTEEN_HOLE_ROUND)
-    .sort((a, b) => a.differential - b.differential)
+    .sort((a, b) => a.score - b.score)
     .slice(0, bonusCount);
 
   for (const round of bonusRounds) {
@@ -166,16 +166,13 @@ function buildPlayerScore(
     bestRoundsByCourse[round.courseId].push(round);
   }
 
-  // Total = sum of all best-round differentials, rounded to one decimal
-  const totalScore =
-    Math.round(
-      Object.values(bestRoundsByCourse)
-        .flat()
-        .reduce((sum, r) => sum + r.differential, 0) * 10
-    ) / 10;
+  // Total = sum of all best-round gross scores
+  const totalScore = Object.values(bestRoundsByCourse)
+    .flat()
+    .reduce((sum, r) => sum + r.score, 0);
 
   const countingRounds = Object.values(bestRoundsByCourse).flat().length;
-  console.log(`[score-service]   → ${countingRounds} counting round(s) selected, total score: ${totalScore}`);
+  console.log(`[score-service]   → ${countingRounds} counting round(s) selected, total gross score: ${totalScore}`);
 
   return { member, rounds, bestRoundsByCourse, totalScore };
 }
@@ -221,7 +218,7 @@ export async function getYearlyScores(
   }
 
   // Sort by number of counting rounds descending (players with more rounds rank
-  // higher), then by total score ascending (lower differential total is better).
+  // higher), then by total gross score ascending (lower score is better).
   players.sort((a, b) => {
     const roundsA = Object.values(a.bestRoundsByCourse).flat().length;
     const roundsB = Object.values(b.bestRoundsByCourse).flat().length;
