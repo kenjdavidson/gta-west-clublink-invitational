@@ -4,6 +4,10 @@ on:
   schedule:
     # ~2am EST Monday (EST=UTC-5 → 7am UTC; shifts to ~3am during EDT)
     - cron: "0 7 * * 1"
+    # ~2am EST Saturday (EST=UTC-5 → 7am UTC; shifts to ~3am during EDT)
+    - cron: "0 7 * * 6"
+    # ~2am EST Sunday (EST=UTC-5 → 7am UTC; shifts to ~3am during EDT)
+    - cron: "0 7 * * 0"
     # ~2am EST Friday (EST=UTC-5 → 7am UTC; shifts to ~3am during EDT)
     - cron: "0 7 * * 5"
   workflow_dispatch:
