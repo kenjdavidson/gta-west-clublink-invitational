@@ -44,7 +44,7 @@ export interface GolfCanadaScoreHistory {
   playedDifferential: number;
   rating: number;
   scaleTypeId: string;
-  scaledHolesPlayed: number;
+  scaledHolesPlayed: number | null;
   score: number;
   slope: number;
   tee: string;

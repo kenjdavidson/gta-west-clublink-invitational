@@ -55,6 +55,7 @@ export interface Round {
   score: number;
   differential: number;
   holes: string;
+  scaledHolesPlayed?: number | null;
 }
 
 export interface PlayerScore {
