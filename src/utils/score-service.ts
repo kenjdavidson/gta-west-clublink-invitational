@@ -40,6 +40,10 @@ const HOME_SCORE_TYPE = "H";
 // Private helpers
 // ---------------------------------------------------------------------------
 
+function isCompletedEighteenHoleRound(round: Pick<Round, "holes" | "scaledHolesPlayed">): boolean {
+  return round.holes === EIGHTEEN_HOLE_ROUND && round.scaledHolesPlayed == null;
+}
+
 /**
  * Normalises a string for fuzzy course-name comparison: lowercase, collapse
  * whitespace, strip punctuation except hyphens.
@@ -111,6 +115,7 @@ function buildPlayerScore(
           score: score.score,
           differential: score.adjustedDifferential,
           holes: score.holes,
+          scaledHolesPlayed: score.scaledHolesPlayed,
         };
         roundIds.set(round, nextRoundId++);
         rounds.push(round);
@@ -149,7 +154,7 @@ function buildPlayerScore(
   for (const course of config.courses) {
     if (course.roundsCount > 0) {
       const courseRounds = rounds
-        .filter((r) => r.courseId === course.clubId && r.holes === EIGHTEEN_HOLE_ROUND)
+        .filter((r) => r.courseId === course.clubId && isCompletedEighteenHoleRound(r))
         .sort((a, b) => a.score - b.score)
         .slice(0, course.roundsCount);
 
@@ -169,7 +174,7 @@ function buildPlayerScore(
   const bonusCandidates = rounds
     .filter((r) => {
       const roundId = roundIds.get(r);
-      return roundId !== undefined && !usedRoundIds.has(roundId) && r.holes === EIGHTEEN_HOLE_ROUND;
+      return roundId !== undefined && !usedRoundIds.has(roundId) && isCompletedEighteenHoleRound(r);
     })
     .sort((a, b) => a.score - b.score);
   let selectedBonusRounds = 0;
