@@ -41,7 +41,7 @@ const HOME_SCORE_TYPE = "H";
 // ---------------------------------------------------------------------------
 
 function isCompletedEighteenHoleRound(round: Pick<Round, "holes" | "scaledHolesPlayed">): boolean {
-  return round.holes === EIGHTEEN_HOLE_ROUND && (round.scaledHolesPlayed ?? null) === null;
+  return round.holes === EIGHTEEN_HOLE_ROUND && round.scaledHolesPlayed == null;
 }
 
 /**
