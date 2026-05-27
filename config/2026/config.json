@@ -86,7 +86,8 @@
     },
     {
       "name": "Irfan Ismail",
-      "individualId": 3233494
+      "individualId": 3233494,
+      "paid": true
     },
     {
       "name": "Ryan Leal",
