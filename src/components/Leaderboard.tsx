@@ -37,6 +37,39 @@ function getRequiredAndBonusRounds(
 const RANK_COL_W = 44;
 const PLAYER_COL_W = 200;
 const TOTAL_COL_W = 72;
+const CHAMPIONSHIP_TEAM_SEEDS = [
+  { team: "A", seeds: [1, 10, 11, 20] },
+  { team: "B", seeds: [2, 9, 12, 19] },
+  { team: "C", seeds: [3, 8, 13, 18] },
+  { team: "D", seeds: [4, 7, 14, 17] },
+  { team: "E", seeds: [5, 6, 15, 16] },
+] as const;
+
+function getChampionshipTeams(players: PlayerScore[]) {
+  return CHAMPIONSHIP_TEAM_SEEDS.map((row) => {
+    const seededPlayers = row.seeds.map((seed) => ({
+      seed,
+      player: players[seed - 1],
+    }));
+
+    const hasAllSeeds = seededPlayers.every((seededPlayer) => seededPlayer.player);
+    const totalScore = hasAllSeeds
+      ? seededPlayers.reduce((sum, seededPlayer) => sum + (seededPlayer.player?.totalScore ?? 0), 0)
+      : null;
+
+    return {
+      team: row.team,
+      seededPlayers,
+      totalScore,
+    };
+  }).sort((a, b) => {
+    if (a.totalScore === null && b.totalScore === null) return a.team.localeCompare(b.team);
+    if (a.totalScore === null) return 1;
+    if (b.totalScore === null) return -1;
+    if (a.totalScore !== b.totalScore) return a.totalScore - b.totalScore;
+    return a.team.localeCompare(b.team);
+  });
+}
 
 export function Leaderboard({
   scores,
@@ -48,6 +81,7 @@ export function Leaderboard({
   const requiredCourses = courses.filter((course) => course.roundsCount > 0);
   const totalScoreCols = requiredCourses.length + bonusRoundsCount;
   const totalColLeft = RANK_COL_W + (showNames ? PLAYER_COL_W : 0);
+  const championshipTeams = getChampionshipTeams(players);
 
   return (
     <div>
@@ -155,6 +189,67 @@ export function Leaderboard({
             )}
           </tbody>
         </table>
+      </div>
+      <div className="mt-6 space-y-2">
+        <h2 className="px-1 text-sm font-semibold uppercase tracking-wide text-green-800">
+          Live Championship Team Standings
+        </h2>
+        <p className="px-1 text-xs text-gray-500">
+          Teams are seeded from the current leaderboard using the championship team rules.
+        </p>
+        <div className="overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
+          <table className="w-full divide-y divide-gray-200 bg-white" style={{ tableLayout: "fixed" }}>
+            <thead>
+              <tr className="bg-green-900 text-white">
+                <th scope="col" className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider">
+                  Place
+                </th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                  Team
+                </th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                  Seed 1
+                </th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                  Seed 2
+                </th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                  Seed 3
+                </th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                  Seed 4
+                </th>
+                <th scope="col" className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider">
+                  Team Total
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {championshipTeams.map((team, index) => (
+                <tr key={team.team} className="hover:bg-green-50">
+                  <td className="px-3 py-3 text-center text-sm tabular-nums text-gray-600">
+                    {index + 1}
+                  </td>
+                  <td className="px-3 py-3 text-sm font-semibold text-green-800">Team {team.team}</td>
+                  {team.seededPlayers.map((seededPlayer) => (
+                    <td key={`${team.team}-${seededPlayer.seed}`} className="px-3 py-3 text-sm text-gray-700">
+                      {seededPlayer.player ? (
+                        <span className="block truncate" title={seededPlayer.player.member.name}>
+                          {seededPlayer.player.member.name}
+                        </span>
+                      ) : (
+                        <span className="text-gray-300">—</span>
+                      )}
+                    </td>
+                  ))}
+                  <td className="px-3 py-3 text-center text-sm font-semibold text-yellow-700 tabular-nums">
+                    {team.totalScore === null ? "–" : formatScore(team.totalScore)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
       <p className="mt-4 px-4 sm:px-6 lg:px-0 text-xs text-gray-400 text-right">
         Last updated: {new Date(scores.generatedAt).toLocaleString()}
