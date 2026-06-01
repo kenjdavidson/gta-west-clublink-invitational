@@ -25,10 +25,10 @@
       "cardId": "6107922710",
       "paid": true
     },
-    {
-      "name": "Jay Bondy",
-      "individualId": 3209882,
-      "cardId": "6109206641"
+    {      
+      "name": "Mike Rego",
+      "individualId": 3517908,
+      "cardId": "6112075345"
     },
     {
       "name": "Gary Dephoure",
@@ -57,7 +57,8 @@
     {
       "name": "Dennis Stacey",
       "individualId": 3083319,
-      "cardId": "6108081940"
+      "cardId": "6108081940",
+      "paid": true
     },
     {
       "name": "Tom Winski",
