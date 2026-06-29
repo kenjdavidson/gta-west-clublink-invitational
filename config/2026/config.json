@@ -99,7 +99,8 @@
     },
     {
       "name": "Adam Gillespie",
-      "individualId": 3085429
+      "individualId": 3085429,
+      "paid": true
     },
     {
       "name": "Chris Redpath",
