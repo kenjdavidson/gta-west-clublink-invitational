@@ -28,7 +28,8 @@
     {      
       "name": "Mike Rego",
       "individualId": 3517908,
-      "cardId": "6112075345"
+      "cardId": "6112075345",
+      "paid": true
     },
     {
       "name": "Gary Dephoure",
@@ -78,7 +79,8 @@
     },
     {
       "name": "Barry Morgan",
-      "individualId": 3071521
+      "individualId": 3071521,
+      "paid": true
     },
     {
       "name": "Glenn Veary",
