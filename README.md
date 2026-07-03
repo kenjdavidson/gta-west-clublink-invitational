@@ -27,7 +27,7 @@ Contains information that applies across all seasons:
 
 ### Year-specific configuration — `config/{year}/config.json`
 
-Contains members, courses, and scoring rules for a single season:
+Contains members, courses, and season-specific rules content for a single season:
 
 ```json
 {
@@ -37,7 +37,29 @@ Contains members, courses, and scoring rules for a single season:
   ],
   "courses": [
     { "name": "Course Name", "clubId": "20599", "roundsCount": 1 }
-  ]
+  ],
+  "rules": {
+    "introduction": ["Intro paragraph 1", "Intro paragraph 2"],
+    "scoreSubmissionEmail": "league@example.com",
+    "scoreSubmissionDeadline": "August 1st",
+    "championship": {
+      "dateLabel": "Sunday, August 16th, 2026",
+      "location": "Course Name",
+      "teamSeedings": [{ "team": "A", "seeds": [1, 10, 11, 20] }],
+      "formats": [{ "round": "Round 1", "format": "9-Hole 2-Man Scramble" }]
+    },
+    "entry": {
+      "fee": "$100",
+      "feeNote": "Capped at 20 golfers",
+      "firstPrize": "$1,000",
+      "firstPrizeNote": "cash + shirts",
+      "secondPrize": "$400",
+      "additionalPrizes": "Additional prizes awarded during the championship",
+      "paymentMethod": "e-transfer",
+      "paymentEmail": "league@example.com",
+      "paymentDeadline": "May 1st, 2026"
+    }
+  }
 }
 ```
 
@@ -49,6 +71,7 @@ Contains members, courses, and scoring rules for a single season:
 | `members[].paid` | Whether the member has paid entry fees for this season |
 | `courses[].clubId` | Golf Canada club ID |
 | `courses[].roundsCount` | Required rounds at this course (`0` = bonus-eligible only) |
+| `rules` | Content and dates for the season's rules page |
 
 ### Completed-season results — `config/{year}/results.json`
 
@@ -86,4 +109,3 @@ npm run dev        # local dev server
 npm run build      # production build (requires GOLFCANADA_USERNAME / GOLFCANADA_PASSWORD env vars)
 npm run preview    # preview the production build
 ```
-

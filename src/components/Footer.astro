@@ -21,7 +21,7 @@ const buildYear = new Date().getFullYear();
         <ul class="space-y-2 text-sm text-green-200">
           <li>
             <a
-              href={`${base}rules`}
+              href={`${base}${currentYear ?? years[years.length - 1] ?? "2026"}/rules`}
               class="hover:text-yellow-300 transition-colors"
             >
               Rules &amp; Format

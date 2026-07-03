@@ -179,5 +179,40 @@
       "clubId": "20058",
       "roundsCount": 0
     }
-  ]
+  ],
+  "rules": {
+    "introduction": [
+      "Welcome! As the first whiffs of freshly cut grass have started wafting in the air, I am sure we are all looking forward to hitting the courses. This year, let's put a different spin on things.",
+      "The West GTA Clublink League Invitational will be a months-long event culminating in a 27-hole championship."
+    ],
+    "scoreSubmissionEmail": "westgtaclinvitational@gmail.com",
+    "scoreSubmissionDeadline": "August 1st",
+    "championship": {
+      "dateLabel": "Sunday, August 16th, 2026",
+      "location": "Glencairn Golf Club",
+      "teamSeedings": [
+        { "team": "A", "seeds": [1, 10, 11, 20] },
+        { "team": "B", "seeds": [2, 9, 12, 19] },
+        { "team": "C", "seeds": [3, 8, 13, 18] },
+        { "team": "D", "seeds": [4, 7, 14, 17] },
+        { "team": "E", "seeds": [5, 6, 15, 16] }
+      ],
+      "formats": [
+        { "round": "Round 1", "format": "9-Hole 2-Man Scramble" },
+        { "round": "Round 2", "format": "9-Hole 2-Man Alternate Shot" },
+        { "round": "Round 3", "format": "9-Hole 2-Man Better Ball (Handicapped)" }
+      ]
+    },
+    "entry": {
+      "fee": "$100",
+      "feeNote": "Capped at 20 golfers",
+      "firstPrize": "$1,000",
+      "firstPrizeNote": "cash + shirts",
+      "secondPrize": "$400",
+      "additionalPrizes": "Additional prizes to be given out during the Championship",
+      "paymentMethod": "e-transfer",
+      "paymentEmail": "westgtaclinvitational@gmail.com",
+      "paymentDeadline": "May 1st, 2026"
+    }
+  }
 }

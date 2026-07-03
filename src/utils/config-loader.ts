@@ -4,7 +4,7 @@
  * Reads the split config layout:
  *
  *   config/site.json           – site-level config (name, currentYear, githubRepo)
- *   config/{year}/config.json  – year-specific config (members, courses, bonusRoundsCount)
+ *   config/{year}/config.json  – year-specific config (members, courses, bonusRoundsCount, rules)
  *   config/{year}/results.json – (optional) cached results for completed seasons
  *
  * The `loadConfig(year)` helper merges site + year configs into a `LeagueConfig`
@@ -85,5 +85,6 @@ export function loadConfig(year?: number): LeagueConfig {
     },
     members: yearCfg.members,
     courses: yearCfg.courses,
+    rules: yearCfg.rules,
   };
 }

@@ -23,6 +23,7 @@ export interface LeagueConfig {
   league: League;
   members: Member[];
   courses: Course[];
+  rules: RulesConfig;
 }
 
 /**
@@ -39,12 +40,46 @@ export interface SiteConfig {
 
 /**
  * Year-specific configuration stored in `config/{year}/config.json`.
- * Contains members, courses, and scoring rules for a single season.
+ * Contains members, courses, and season-specific rules content for a single season.
  */
 export interface YearConfig {
   members: Member[];
   courses: Course[];
   bonusRoundsCount?: number;
+  rules: RulesConfig;
+}
+
+export interface TeamSeeding {
+  team: string;
+  seeds: number[];
+}
+
+export interface ChampionshipFormat {
+  round: string;
+  format: string;
+}
+
+export interface RulesConfig {
+  introduction: string[];
+  scoreSubmissionEmail: string;
+  scoreSubmissionDeadline: string;
+  championship: {
+    dateLabel: string;
+    location: string;
+    teamSeedings: TeamSeeding[];
+    formats: ChampionshipFormat[];
+  };
+  entry: {
+    fee: string;
+    feeNote: string;
+    firstPrize: string;
+    firstPrizeNote: string;
+    secondPrize: string;
+    additionalPrizes: string;
+    paymentMethod: string;
+    paymentEmail: string;
+    paymentDeadline: string;
+  };
 }
 
 export interface Round {
