@@ -135,3 +135,43 @@ export async function getHistory(individualId: number): Promise<GolfCanadaScoreH
   console.log(`[golf-canada] Received ${json.data.length} score records for individualId=${individualId}`);
   return json.data;
 }
+
+/**
+ * Attempts to fetch member profile information including current handicap.
+ *
+ * Note: This endpoint may only return data for members the authenticated user
+ * is following, or may require additional permissions. Returns null if the
+ * request fails.
+ *
+ * @param individualId  The member's Golf Canada individual ID
+ */
+export async function getMemberProfile(individualId: number): Promise<{ handicap: number } | null> {
+  const loginData = await login();
+  const url = `${API_BASE}/members/${individualId}`;
+
+  console.log(`[golf-canada] Fetching profile for individualId=${individualId}`);
+
+  try {
+    const response = await fetch(url, {
+      headers: { Authorization: `****** },
+    });
+
+    if (!response.ok) {
+      console.warn(`[golf-canada] Failed to fetch profile for individualId=${individualId}: ${response.status}`);
+      return null;
+    }
+
+    const json = (await response.json()) as { handicap?: string | number };
+    if (json.handicap != null) {
+      const handicapValue = typeof json.handicap === 'string' ? parseFloat(json.handicap) : json.handicap;
+      console.log(`[golf-canada] Retrieved handicap ${handicapValue} for individualId=${individualId}`);
+      return { handicap: handicapValue };
+    }
+
+    console.warn(`[golf-canada] No handicap found in profile for individualId=${individualId}`);
+    return null;
+  } catch (err) {
+    console.warn(`[golf-canada] Error fetching profile for individualId=${individualId}:`, err);
+    return null;
+  }
+}

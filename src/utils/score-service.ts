@@ -13,7 +13,7 @@
  * file instead of making any Golf Canada API calls.
  */
 
-import { getHistory } from "../service/golf-canada.js";
+import { getHistory, getMemberProfile } from "../service/golf-canada.js";
 import { loadYearlyResults } from "./config-loader.js";
 import type { LeagueConfig, Member, PlayerScore, Round, YearlyScores } from "../types/index.js";
 import type { GolfCanadaScoreHistory } from "../service/golf-canada.js";
@@ -257,10 +257,20 @@ export async function getYearlyScores(
   for (const member of config.members) {
     console.log(`[score-service] Fetching scores for ${member.name} (individualId: ${member.individualId})…`);
     try {
+      // Fetch handicap if not already in config
+      let memberWithHandicap = member;
+      if (member.handicap == null) {
+        const profile = await getMemberProfile(member.individualId);
+        if (profile && profile.handicap != null) {
+          memberWithHandicap = { ...member, handicap: profile.handicap };
+          console.log(`[score-service]   → Fetched handicap: ${profile.handicap}`);
+        }
+      }
+
       const history = await getHistory(member.individualId);
       const yearScores = filterByYear(history, year);
       console.log(`[score-service]   ${history.length} total record(s) → ${yearScores.length} in ${year}`);
-      players.push(buildPlayerScore(member, yearScores, config));
+      players.push(buildPlayerScore(memberWithHandicap, yearScores, config));
     } catch (err) {
       // Member is included with empty scores on API failure so they still
       // appear on the leaderboard.

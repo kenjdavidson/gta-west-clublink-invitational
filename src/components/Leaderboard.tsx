@@ -348,7 +348,7 @@ function PlayerRow({
             className={`px-3 py-3 text-sm text-center tabular-nums border-l border-gray-100 ${
               round
                 ? round.isDefault
-                  ? "text-orange-500 italic"
+                  ? "bg-orange-50 text-orange-600 italic font-medium"
                   : "text-gray-700"
                 : "text-gray-300"
             }`}
@@ -371,17 +371,31 @@ function PlayerRow({
           <td
             key={`bonus-${i + 1}`}
             className={`px-3 py-3 text-sm text-center tabular-nums border-l border-gray-100 ${
-              round ? "text-yellow-700" : "text-gray-300"
+              round 
+                ? round.isDefault
+                  ? "bg-orange-50 text-orange-600 italic font-medium"
+                  : "text-yellow-700"
+                : "text-gray-300"
             }`}
-            title={round ? `${round.courseName} – ${round.date}` : undefined}
+            title={
+              round
+                ? round.isDefault
+                  ? `Default score: par + 1.5 × handicap`
+                  : `${round.courseName} – ${round.date}`
+                : undefined
+            }
           >
             {round ? (
-              <>
-                <span>{round.score}</span>
-                <span className="block text-[10px] leading-tight text-gray-500 truncate" title={round.courseName}>
-                  ({round.courseName})
-                </span>
-              </>
+              round.isDefault ? (
+                `${round.score}*`
+              ) : (
+                <>
+                  <span>{round.score}</span>
+                  <span className="block text-[10px] leading-tight text-gray-500 truncate" title={round.courseName}>
+                    ({round.courseName})
+                  </span>
+                </>
+              )
             ) : (
               "–"
             )}
@@ -470,7 +484,9 @@ function MobilePlayerCard({
             return (
               <div
                 key={course.clubId}
-                className="px-4 py-2 flex items-center justify-between gap-4"
+                className={`px-4 py-2 flex items-center justify-between gap-4 ${
+                  round?.isDefault ? "bg-orange-50" : ""
+                }`}
               >
                 <span
                   className="text-xs text-gray-500 flex-1 min-w-0 truncate"
@@ -482,7 +498,7 @@ function MobilePlayerCard({
                   className={`text-sm tabular-nums shrink-0 ${
                     round
                       ? round.isDefault
-                        ? "text-orange-500 italic"
+                        ? "text-orange-600 italic font-medium"
                         : "text-gray-700"
                       : "text-gray-300"
                   }`}
@@ -505,16 +521,33 @@ function MobilePlayerCard({
             return (
               <div
                 key={`bonus-${i + 1}`}
-                className="px-4 py-2 flex items-center justify-between gap-4"
+                className={`px-4 py-2 flex items-center justify-between gap-4 ${
+                  round?.isDefault ? "bg-orange-50" : ""
+                }`}
               >
                 <span className="text-xs text-gray-500">Bonus {i + 1}</span>
                 <span
                   className={`text-sm tabular-nums shrink-0 ${
-                    round ? "text-yellow-700" : "text-gray-300"
+                    round 
+                      ? round.isDefault
+                        ? "text-orange-600 italic font-medium"
+                        : "text-yellow-700"
+                      : "text-gray-300"
                   }`}
-                  title={round ? `${round.courseName} – ${round.date}` : undefined}
+                  title={
+                    round
+                      ? round.isDefault
+                        ? `Default score: par + 1.5 × handicap`
+                        : `${round.courseName} – ${round.date}`
+                      : undefined
+                  }
                 >
-                  {round ? `${round.score} (${round.courseName})` : "–"}
+                  {round 
+                    ? round.isDefault 
+                      ? `${round.score}*`
+                      : `${round.score} (${round.courseName})`
+                    : "–"
+                  }
                 </span>
               </div>
             );
