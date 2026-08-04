@@ -254,6 +254,9 @@ export function Leaderboard({
       <p className="mt-4 px-4 sm:px-6 lg:px-0 text-xs text-gray-400 text-right">
         Last updated: {new Date(scores.generatedAt).toLocaleString()}
       </p>
+      <p className="mt-1 px-4 sm:px-6 lg:px-0 text-xs text-orange-400 text-right">
+        * Default score applied (par + 1.5 × handicap) for unplayed rounds
+      </p>
     </div>
   );
 }
@@ -343,11 +346,21 @@ function PlayerRow({
           <td
             key={course.clubId}
             className={`px-3 py-3 text-sm text-center tabular-nums border-l border-gray-100 ${
-              round ? "text-gray-700" : "text-gray-300"
+              round
+                ? round.isDefault
+                  ? "text-orange-500 italic"
+                  : "text-gray-700"
+                : "text-gray-300"
             }`}
-            title={round ? `${round.courseName} – ${round.date}` : undefined}
+            title={
+              round
+                ? round.isDefault
+                  ? `Default score: par + 1.5 × handicap`
+                  : `${round.courseName} – ${round.date}`
+                : undefined
+            }
           >
-            {round ? round.score : "–"}
+            {round ? (round.isDefault ? `${round.score}*` : round.score) : "–"}
           </td>
         );
       })}
@@ -467,11 +480,21 @@ function MobilePlayerCard({
                 </span>
                 <span
                   className={`text-sm tabular-nums shrink-0 ${
-                    round ? "text-gray-700" : "text-gray-300"
+                    round
+                      ? round.isDefault
+                        ? "text-orange-500 italic"
+                        : "text-gray-700"
+                      : "text-gray-300"
                   }`}
-                  title={round ? `${round.courseName} – ${round.date}` : undefined}
+                  title={
+                    round
+                      ? round.isDefault
+                        ? `Default score: par + 1.5 × handicap`
+                        : `${round.courseName} – ${round.date}`
+                      : undefined
+                  }
                 >
-                  {round ? round.score : "–"}
+                  {round ? (round.isDefault ? `${round.score}*` : round.score) : "–"}
                 </span>
               </div>
             );

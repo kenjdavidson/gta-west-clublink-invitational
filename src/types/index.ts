@@ -3,6 +3,7 @@ export interface Member {
   individualId: number;
   cardId?: string;
   paid?: boolean;
+  handicap?: number;
 }
 
 export interface Course {
@@ -10,6 +11,7 @@ export interface Course {
   clubId: string;
   roundsCount: number;
   tee?: string;
+  par?: number;
 }
 
 export interface League {
@@ -56,6 +58,7 @@ export interface Round {
   differential: number;
   holes: string;
   scaledHolesPlayed?: number | null;
+  isDefault?: boolean;
 }
 
 export interface PlayerScore {

@@ -148,6 +148,8 @@ function buildPlayerScore(
 
   // Phase 1: For each course with a required round count (roundsCount > 0),
   // select the N best rounds (lowest gross score first).
+  // If the player has no rounds for a required course and both par and handicap
+  // are available, apply a default score of par + (1.5 * handicap).
   const bestRoundsByCourse: Record<string, Round[]> = {};
   const usedRoundIds = new Set<number>();
 
@@ -164,6 +166,20 @@ function buildPlayerScore(
           const roundId = roundIds.get(r);
           if (roundId !== undefined) usedRoundIds.add(roundId);
         });
+      } else if (course.par != null && member.handicap != null) {
+        // No rounds played for this required course — apply default score.
+        const defaultScore = Math.round(course.par + 1.5 * member.handicap);
+        const defaultRound: Round = {
+          date: "",
+          courseId: course.clubId,
+          courseName: course.name,
+          score: defaultScore,
+          differential: 0,
+          holes: EIGHTEEN_HOLE_ROUND,
+          isDefault: true,
+        };
+        bestRoundsByCourse[course.clubId] = [defaultRound];
+        console.log(`[score-service]     ⚑ Default score applied for ${member.name} at "${course.name}": ${defaultScore} (par ${course.par} + 1.5 × handicap ${member.handicap})`);
       }
     }
   }
