@@ -147,7 +147,7 @@ export async function getHistory(individualId: number): Promise<GolfCanadaScoreH
  */
 export async function getMemberProfile(individualId: number): Promise<{ handicap: number } | null> {
   const loginData = await login();
-  const url = `${API_BASE}/members/${individualId}`;
+  const url = `${API_BASE}/scores/getProfile?individualId=${individualId}`;
 
   console.log(`[golf-canada] Fetching profile for individualId=${individualId}`);
 
