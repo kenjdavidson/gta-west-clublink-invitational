@@ -130,7 +130,7 @@
       "name": "Georgetown Golf Club",
       "clubId": "20697",
       "roundsCount": 1,
-      "par": 72
+      "par": 71
     },
     {
       "name": "Greystone Golf Club",
@@ -142,7 +142,7 @@
       "name": "Heron Point Golf Links",
       "clubId": "20719",
       "roundsCount": 1,
-      "par": 72
+      "par": 71
     },
     {
       "name": "RattleSnake Point Golf Club - Copperhead",
@@ -159,32 +159,38 @@
     {
       "name": "Hidden Lake Golf Club - New Course",
       "clubId": "20722",
-      "roundsCount": 0
+      "roundsCount": 0,
+      "par": 71
     },
     {
       "name": "Hidden Lake Golf Club - Old Course",
       "clubId": "20721",
-      "roundsCount": 0
+      "roundsCount": 0,
+      "par": 71
     },
     {
       "name": "Glen Abbey Golf Club",
       "clubId": "20699",
-      "roundsCount": 0
+      "roundsCount": 0,
+      "par": 73
     },
     {
       "name": "Glencairn Golf Club - Leithfield-Speyside",
       "clubId": "20056",
-      "roundsCount": 0
+      "roundsCount": 0,
+      "par": 72
     },
     {
       "name": "Glencairn Golf Club - Scotch Block-Leithfield",
       "clubId": "20057",
-      "roundsCount": 0
+      "roundsCount": 0,
+      "par": 72
     },
     {
       "name": "Glencairn Golf Club - Speyside-Scotch Block",
       "clubId": "20058",
-      "roundsCount": 0
+      "roundsCount": 0,
+      "par": 72
     }
   ]
 }
