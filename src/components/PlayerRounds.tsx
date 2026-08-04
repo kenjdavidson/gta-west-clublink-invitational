@@ -174,25 +174,41 @@ interface RoundRowProps {
 function RoundRow({ round, index, highlight }: RoundRowProps) {
   const bg = highlight
     ? "bg-yellow-50"
-    : index % 2 === 0
-      ? "bg-white"
-      : "bg-gray-50";
+    : round.isDefault
+      ? "bg-orange-50"
+      : index % 2 === 0
+        ? "bg-white"
+        : "bg-gray-50";
 
   return (
     <tr className={`${bg} hover:bg-green-50 transition-colors`}>
-      <td className="px-4 py-3 text-sm text-gray-800">{round.courseName}</td>
-      <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">
-        {new Date(round.date).toLocaleDateString(undefined, {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })}
+      <td className="px-4 py-3 text-sm text-gray-800">
+        {round.courseName}
+        {round.isDefault && (
+          <span
+            className="ml-1.5 text-xs text-orange-500 font-medium"
+            title="Default score: par + 1.5 × handicap"
+          >
+            (default)
+          </span>
+        )}
       </td>
-      <td className="px-4 py-3 text-sm text-center tabular-nums text-gray-700">
-        {round.score}
+      <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">
+        {round.isDefault ? (
+          <span className="text-orange-400 italic">–</span>
+        ) : (
+          new Date(round.date).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })
+        )}
+      </td>
+      <td className={`px-4 py-3 text-sm text-center tabular-nums ${round.isDefault ? "text-orange-500 italic font-medium" : "text-gray-700"}`}>
+        {round.isDefault ? `${round.score}*` : round.score}
       </td>
       <td className="px-4 py-3 text-sm text-center tabular-nums font-medium text-green-800">
-        {round.differential.toFixed(1)}
+        {round.isDefault ? "–" : round.differential.toFixed(1)}
       </td>
     </tr>
   );

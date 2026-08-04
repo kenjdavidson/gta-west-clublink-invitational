@@ -25,7 +25,7 @@
       "cardId": "6107922710",
       "paid": true
     },
-    {      
+    {
       "name": "Mike Rego",
       "individualId": 3517908,
       "cardId": "6112075345",
@@ -117,37 +117,44 @@
     {
       "name": "Blue Springs Golf Club",
       "clubId": "20599",
-      "roundsCount": 1
+      "roundsCount": 1,
+      "par": 72
     },
     {
       "name": "Glendale Golf Club",
       "clubId": "20703",
-      "roundsCount": 1
+      "roundsCount": 1,
+      "par": 72
     },
     {
       "name": "Georgetown Golf Club",
       "clubId": "20697",
-      "roundsCount": 1
+      "roundsCount": 1,
+      "par": 72
     },
     {
       "name": "Greystone Golf Club",
       "clubId": "20710",
-      "roundsCount": 1
+      "roundsCount": 1,
+      "par": 72
     },
     {
       "name": "Heron Point Golf Links",
       "clubId": "20719",
-      "roundsCount": 1
+      "roundsCount": 1,
+      "par": 72
     },
     {
       "name": "RattleSnake Point Golf Club - Copperhead",
       "clubId": "20859",
-      "roundsCount": 1
+      "roundsCount": 1,
+      "par": 72
     },
     {
       "name": "RattleSnake Point Golf Club - Sidewinder",
       "clubId": "20858",
-      "roundsCount": 1
+      "roundsCount": 1,
+      "par": 72
     },
     {
       "name": "Hidden Lake Golf Club - New Course",
