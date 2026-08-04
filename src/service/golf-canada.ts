@@ -153,7 +153,7 @@ export async function getMemberProfile(individualId: number): Promise<{ handicap
 
   try {
     const response = await fetch(url, {
-      headers: { Authorization: `****** },
+      headers: { Authorization: `Bearer ${loginData.access_token}` },
     });
 
     if (!response.ok) {
