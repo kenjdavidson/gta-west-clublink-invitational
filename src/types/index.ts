@@ -18,6 +18,7 @@ export interface League {
   name: string;
   currentYear: number;
   bonusRoundsCount?: number;
+  endDate?: string;
   githubRepo?: string;
 }
 
@@ -47,6 +48,7 @@ export interface YearConfig {
   members: Member[];
   courses: Course[];
   bonusRoundsCount?: number;
+  endDate?: string;
 }
 
 export interface Round {
