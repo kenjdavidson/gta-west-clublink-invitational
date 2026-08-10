@@ -129,9 +129,16 @@ export function Leaderboard({
                   {team.seededPlayers.map((seededPlayer) => (
                     <td key={`${team.team}-${seededPlayer.seed}`} className="px-3 py-3 text-sm text-gray-700">
                       {seededPlayer.player ? (
-                        <span className="block truncate" title={seededPlayer.player.member.name}>
-                          {seededPlayer.player.member.name}
-                        </span>
+                        seededPlayer.player.member.name === "Dennis Stacey" ? (
+                          <span className="block leading-tight" title="Dennis Stacey (Chris Sarsdon)">
+                            <span className="line-through">Dennis Stacey</span>
+                            <span className="block text-xs text-gray-500">(Chris Sarsdon)</span>
+                          </span>
+                        ) : (
+                          <span className="block truncate" title={seededPlayer.player.member.name}>
+                            {seededPlayer.player.member.name}
+                          </span>
+                        )
                       ) : (
                         <span className="text-gray-300">—</span>
                       )}
