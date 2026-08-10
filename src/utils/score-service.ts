@@ -69,13 +69,26 @@ function courseNameMatches(gcName: string | null, leagueName: string): boolean {
 }
 
 /**
- * Filters a Golf Canada history array to scores played in `targetYear`.
+ * Filters a Golf Canada history array to scores played in `targetYear`,
+ * optionally capped at an inclusive `endDate` (YYYY-MM-DD).
  */
 function filterByYear(
   scores: GolfCanadaScoreHistory[],
-  targetYear: number
+  targetYear: number,
+  endDate?: string
 ): GolfCanadaScoreHistory[] {
-  return scores.filter((s) => new Date(s.date).getFullYear() === targetYear);
+  return scores.filter((s) => {
+    const scoreDate = s.date.slice(0, 10);
+    if (new Date(scoreDate).getFullYear() !== targetYear) {
+      return false;
+    }
+
+    if (!endDate) {
+      return true;
+    }
+
+    return scoreDate <= endDate;
+  });
 }
 
 /**
@@ -268,7 +281,7 @@ export async function getYearlyScores(
       }
 
       const history = await getHistory(member.individualId);
-      const yearScores = filterByYear(history, year);
+      const yearScores = filterByYear(history, year, config.league.endDate);
       console.log(`[score-service]   ${history.length} total record(s) → ${yearScores.length} in ${year}`);
       players.push(buildPlayerScore(memberWithHandicap, yearScores, config));
     } catch (err) {

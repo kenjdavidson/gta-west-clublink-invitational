@@ -85,7 +85,68 @@ export function Leaderboard({
 
   return (
     <div>
-      <div className="md:hidden space-y-3">
+      <div className="space-y-2">
+        <h2 className="px-1 text-sm font-semibold uppercase tracking-wide text-green-800">
+          Live Championship Team Standings
+        </h2>
+        <p className="px-1 text-xs text-gray-500">
+          Teams are seeded from the current leaderboard using the championship team rules.
+        </p>
+        <div className="overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
+          <table className="w-full divide-y divide-gray-200 bg-white" style={{ tableLayout: "fixed" }}>
+            <thead>
+              <tr className="bg-green-900 text-white">
+                <th scope="col" className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider">
+                  Place
+                </th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                  Team
+                </th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                  Seed 1
+                </th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                  Seed 2
+                </th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                  Seed 3
+                </th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                  Seed 4
+                </th>
+                <th scope="col" className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider">
+                  Team Total
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {championshipTeams.map((team, index) => (
+                <tr key={team.team} className="hover:bg-green-50">
+                  <td className="px-3 py-3 text-center text-sm tabular-nums text-gray-600">
+                    {index + 1}
+                  </td>
+                  <td className="px-3 py-3 text-sm font-semibold text-green-800">Team {team.team}</td>
+                  {team.seededPlayers.map((seededPlayer) => (
+                    <td key={`${team.team}-${seededPlayer.seed}`} className="px-3 py-3 text-sm text-gray-700">
+                      {seededPlayer.player ? (
+                        <span className="block truncate" title={seededPlayer.player.member.name}>
+                          {seededPlayer.player.member.name}
+                        </span>
+                      ) : (
+                        <span className="text-gray-300">—</span>
+                      )}
+                    </td>
+                  ))}
+                  <td className="px-3 py-3 text-center text-sm font-semibold text-yellow-700 tabular-nums">
+                    {team.totalScore === null ? "–" : formatScore(team.totalScore)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className="mt-6 md:hidden space-y-3">
         {players.map((player, index) => (
           <MobilePlayerCard
             key={player.member.individualId}
@@ -106,7 +167,7 @@ export function Leaderboard({
         )}
       </div>
 
-      <div className="hidden md:block overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
+      <div className="mt-6 hidden md:block overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
         <table
           className="w-full divide-y divide-gray-200 bg-white"
           style={{ tableLayout: "fixed" }}
@@ -189,67 +250,6 @@ export function Leaderboard({
             )}
           </tbody>
         </table>
-      </div>
-      <div className="mt-6 space-y-2">
-        <h2 className="px-1 text-sm font-semibold uppercase tracking-wide text-green-800">
-          Live Championship Team Standings
-        </h2>
-        <p className="px-1 text-xs text-gray-500">
-          Teams are seeded from the current leaderboard using the championship team rules.
-        </p>
-        <div className="overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
-          <table className="w-full divide-y divide-gray-200 bg-white" style={{ tableLayout: "fixed" }}>
-            <thead>
-              <tr className="bg-green-900 text-white">
-                <th scope="col" className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider">
-                  Place
-                </th>
-                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                  Team
-                </th>
-                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                  Seed 1
-                </th>
-                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                  Seed 2
-                </th>
-                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                  Seed 3
-                </th>
-                <th scope="col" className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider">
-                  Seed 4
-                </th>
-                <th scope="col" className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider">
-                  Team Total
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {championshipTeams.map((team, index) => (
-                <tr key={team.team} className="hover:bg-green-50">
-                  <td className="px-3 py-3 text-center text-sm tabular-nums text-gray-600">
-                    {index + 1}
-                  </td>
-                  <td className="px-3 py-3 text-sm font-semibold text-green-800">Team {team.team}</td>
-                  {team.seededPlayers.map((seededPlayer) => (
-                    <td key={`${team.team}-${seededPlayer.seed}`} className="px-3 py-3 text-sm text-gray-700">
-                      {seededPlayer.player ? (
-                        <span className="block truncate" title={seededPlayer.player.member.name}>
-                          {seededPlayer.player.member.name}
-                        </span>
-                      ) : (
-                        <span className="text-gray-300">—</span>
-                      )}
-                    </td>
-                  ))}
-                  <td className="px-3 py-3 text-center text-sm font-semibold text-yellow-700 tabular-nums">
-                    {team.totalScore === null ? "–" : formatScore(team.totalScore)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </div>
       <p className="mt-4 px-4 sm:px-6 lg:px-0 text-xs text-gray-400 text-right">
         Last updated: {new Date(scores.generatedAt).toLocaleString()}

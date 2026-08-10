@@ -4,7 +4,7 @@
  * Reads the split config layout:
  *
  *   config/site.json           – site-level config (name, currentYear, githubRepo)
- *   config/{year}/config.json  – year-specific config (members, courses, bonusRoundsCount)
+ *   config/{year}/config.json  – year-specific config (members, courses, bonusRoundsCount, endDate)
  *   config/{year}/results.json – (optional) cached results for completed seasons
  *
  * The `loadConfig(year)` helper merges site + year configs into a `LeagueConfig`
@@ -16,6 +16,7 @@ import * as path from "path";
 import type { SiteConfig, YearConfig, LeagueConfig, YearlyScores } from "../types/index.js";
 
 const CONFIG_DIR = path.join(process.cwd(), "config");
+const DATE_ONLY_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 /**
  * Loads the site-level configuration from `config/site.json`.
@@ -30,7 +31,21 @@ export function loadSiteConfig(): SiteConfig {
  */
 export function loadYearConfig(year: number): YearConfig {
   const yearConfigPath = path.join(CONFIG_DIR, String(year), "config.json");
-  return JSON.parse(fs.readFileSync(yearConfigPath, "utf-8")) as YearConfig;
+  const yearConfig = JSON.parse(fs.readFileSync(yearConfigPath, "utf-8")) as YearConfig;
+
+  if (yearConfig.endDate) {
+    const isValidDate =
+      DATE_ONLY_RE.test(yearConfig.endDate) &&
+      !Number.isNaN(new Date(yearConfig.endDate).getTime());
+
+    if (!isValidDate) {
+      throw new Error(
+        `Invalid endDate "${yearConfig.endDate}" in config/${year}/config.json; expected YYYY-MM-DD`
+      );
+    }
+  }
+
+  return yearConfig;
 }
 
 /**
@@ -82,6 +97,7 @@ export function loadConfig(year?: number): LeagueConfig {
       currentYear: resolvedYear,
       githubRepo: site.league.githubRepo,
       bonusRoundsCount: yearCfg.bonusRoundsCount,
+      endDate: yearCfg.endDate,
     },
     members: yearCfg.members,
     courses: yearCfg.courses,
