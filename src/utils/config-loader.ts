@@ -16,6 +16,7 @@ import * as path from "path";
 import type { SiteConfig, YearConfig, LeagueConfig, YearlyScores } from "../types/index.js";
 
 const CONFIG_DIR = path.join(process.cwd(), "config");
+const DATE_ONLY_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 /**
  * Loads the site-level configuration from `config/site.json`.
@@ -30,7 +31,21 @@ export function loadSiteConfig(): SiteConfig {
  */
 export function loadYearConfig(year: number): YearConfig {
   const yearConfigPath = path.join(CONFIG_DIR, String(year), "config.json");
-  return JSON.parse(fs.readFileSync(yearConfigPath, "utf-8")) as YearConfig;
+  const yearConfig = JSON.parse(fs.readFileSync(yearConfigPath, "utf-8")) as YearConfig;
+
+  if (yearConfig.endDate) {
+    const isValidDate =
+      DATE_ONLY_RE.test(yearConfig.endDate) &&
+      !Number.isNaN(new Date(yearConfig.endDate).getTime());
+
+    if (!isValidDate) {
+      throw new Error(
+        `Invalid endDate "${yearConfig.endDate}" in config/${year}/config.json; expected YYYY-MM-DD`
+      );
+    }
+  }
+
+  return yearConfig;
 }
 
 /**

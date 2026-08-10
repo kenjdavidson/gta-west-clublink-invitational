@@ -30,9 +30,6 @@ const DEFAULT_BONUS_ROUNDS_COUNT = 3;
 /** Hole count value used by Golf Canada to identify 18-hole rounds. */
 const EIGHTEEN_HOLE_ROUND = "18";
 
-/** Canonical date-only format used by config and Golf Canada score history. */
-const DATE_ONLY_RE = /^\d{4}-\d{2}-\d{2}$/;
-
 /**
  * Golf Canada score type indicating the round was played at the member's home
  * club. Logged for diagnostics when the API omits the course name.
@@ -90,11 +87,7 @@ function filterByYear(
       return true;
     }
 
-    if (DATE_ONLY_RE.test(scoreDate) && DATE_ONLY_RE.test(endDate)) {
-      return scoreDate <= endDate;
-    }
-
-    return new Date(s.date).getTime() <= new Date(endDate).getTime();
+    return scoreDate <= endDate;
   });
 }
 
