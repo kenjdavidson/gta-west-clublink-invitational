@@ -166,110 +166,118 @@ export function Leaderboard({
           </table>
         </div>
       </div>
-      <div className="mt-6 md:hidden space-y-3">
-        {players.map((player, index) => (
-          <MobilePlayerCard
-            key={player.member.individualId}
-            rank={index + 1}
-            player={player}
-            requiredCourses={requiredCourses}
-            allCourses={courses}
-            bonusRoundsCount={bonusRoundsCount}
-            year={scores.year}
-          />
-        ))}
-        {players.length === 0 && (
-          <div className="rounded-xl shadow ring-1 ring-gray-200 bg-white">
-            <p className="px-4 py-12 text-center text-gray-400">
-              No scores available yet for this season.
-            </p>
-          </div>
-        )}
-      </div>
+      <div className="mt-6 space-y-2">
+        <h2 className="px-1 text-sm font-semibold uppercase tracking-wide text-green-800">
+          Live Yearly Leaderboard
+        </h2>
+        <p className="px-1 text-xs text-gray-500">
+          Seeded based on rounds played scores, including default rounds
+        </p>
+        <div className="md:hidden space-y-3">
+          {players.map((player, index) => (
+            <MobilePlayerCard
+              key={player.member.individualId}
+              rank={index + 1}
+              player={player}
+              requiredCourses={requiredCourses}
+              allCourses={courses}
+              bonusRoundsCount={bonusRoundsCount}
+              year={scores.year}
+            />
+          ))}
+          {players.length === 0 && (
+            <div className="rounded-xl shadow ring-1 ring-gray-200 bg-white">
+              <p className="px-4 py-12 text-center text-gray-400">
+                No scores available yet for this season.
+              </p>
+            </div>
+          )}
+        </div>
 
-      <div className="mt-6 hidden md:block overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
-        <table
-          className="w-full divide-y divide-gray-200 bg-white"
-          style={{ tableLayout: "fixed" }}
-        >
-          <colgroup>
-            <col style={{ width: `${RANK_COL_W}px` }} />
-            {showNames && <col style={{ width: `${PLAYER_COL_W}px` }} />}
-            <col style={{ width: `${TOTAL_COL_W}px` }} />
-          </colgroup>
-          <thead>
-            <tr className="bg-green-900 text-white">
-              <th
-                scope="col"
-                className="sticky z-20 bg-green-900 px-2 py-3 text-center text-xs font-semibold uppercase tracking-wider"
-                style={{ left: 0 }}
-              >
-                #
-              </th>
-              {showNames && (
+        <div className="hidden md:block overflow-x-auto rounded-xl shadow ring-1 ring-gray-200">
+          <table
+            className="w-full divide-y divide-gray-200 bg-white"
+            style={{ tableLayout: "fixed" }}
+          >
+            <colgroup>
+              <col style={{ width: `${RANK_COL_W}px` }} />
+              {showNames && <col style={{ width: `${PLAYER_COL_W}px` }} />}
+              <col style={{ width: `${TOTAL_COL_W}px` }} />
+            </colgroup>
+            <thead>
+              <tr className="bg-green-900 text-white">
                 <th
                   scope="col"
-                  className="sticky z-20 bg-green-900 px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider"
-                  style={{ left: RANK_COL_W }}
+                  className="sticky z-20 bg-green-900 px-2 py-3 text-center text-xs font-semibold uppercase tracking-wider"
+                  style={{ left: 0 }}
                 >
-                  Player
+                  #
                 </th>
-              )}
-              <th
-                scope="col"
-                className="sticky z-20 bg-green-900 px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider border-l border-green-700 border-r-2 border-r-green-700"
-                style={{ left: totalColLeft }}
-              >
-                Total
-              </th>
-              {requiredCourses.map((course) => (
+                {showNames && (
+                  <th
+                    scope="col"
+                    className="sticky z-20 bg-green-900 px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider"
+                    style={{ left: RANK_COL_W }}
+                  >
+                    Player
+                  </th>
+                )}
                 <th
-                  key={course.clubId}
                   scope="col"
-                  className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider border-l border-green-700"
+                  className="sticky z-20 bg-green-900 px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider border-l border-green-700 border-r-2 border-r-green-700"
+                  style={{ left: totalColLeft }}
                 >
-                  <span className="block truncate" title={course.name}>
-                    {course.name}
-                  </span>
+                  Total
                 </th>
-              ))}
-              {Array.from({ length: bonusRoundsCount }, (_, i) => (
-                <th
-                  key={`bonus-${i + 1}`}
-                  scope="col"
-                  className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider border-l border-green-700"
-                >
-                  Bonus {i + 1}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {players.map((player, index) => (
-              <PlayerRow
-                key={player.member.individualId}
-                rank={index + 1}
-                player={player}
-                requiredCourses={requiredCourses}
-                allCourses={courses}
-                bonusRoundsCount={bonusRoundsCount}
-                year={scores.year}
-                showNames={showNames}
-                totalColLeft={totalColLeft}
-              />
-            ))}
-            {players.length === 0 && (
-              <tr>
-                <td
-                  colSpan={1 + (showNames ? 1 : 0) + 1 + totalScoreCols}
-                  className="px-4 py-12 text-center text-gray-400"
-                >
-                  No scores available yet for this season.
-                </td>
+                {requiredCourses.map((course) => (
+                  <th
+                    key={course.clubId}
+                    scope="col"
+                    className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider border-l border-green-700"
+                  >
+                    <span className="block truncate" title={course.name}>
+                      {course.name}
+                    </span>
+                  </th>
+                ))}
+                {Array.from({ length: bonusRoundsCount }, (_, i) => (
+                  <th
+                    key={`bonus-${i + 1}`}
+                    scope="col"
+                    className="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider border-l border-green-700"
+                  >
+                    Bonus {i + 1}
+                  </th>
+                ))}
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {players.map((player, index) => (
+                <PlayerRow
+                  key={player.member.individualId}
+                  rank={index + 1}
+                  player={player}
+                  requiredCourses={requiredCourses}
+                  allCourses={courses}
+                  bonusRoundsCount={bonusRoundsCount}
+                  year={scores.year}
+                  showNames={showNames}
+                  totalColLeft={totalColLeft}
+                />
+              ))}
+              {players.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={1 + (showNames ? 1 : 0) + 1 + totalScoreCols}
+                    className="px-4 py-12 text-center text-gray-400"
+                  >
+                    No scores available yet for this season.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
       <p className="mt-4 px-4 sm:px-6 lg:px-0 text-xs text-gray-400 text-right">
         Last updated: {new Date(scores.generatedAt).toLocaleString()}
