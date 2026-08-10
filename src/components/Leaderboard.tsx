@@ -44,6 +44,28 @@ const CHAMPIONSHIP_TEAM_SEEDS = [
   { team: "D", seeds: [4, 7, 14, 17] },
   { team: "E", seeds: [5, 6, 15, 16] },
 ] as const;
+const TEAM_TABLE_REPLACEMENTS: Record<string, string> = {
+  "Dennis Stacey": "Chris Sarsdon",
+};
+
+function TeamSeedPlayerName({ playerName }: { playerName: string }) {
+  const replacementName = TEAM_TABLE_REPLACEMENTS[playerName];
+
+  if (!replacementName) {
+    return (
+      <span className="block truncate" title={playerName}>
+        {playerName}
+      </span>
+    );
+  }
+
+  return (
+    <span className="block leading-tight" title={`${playerName} (${replacementName})`}>
+      <span className="line-through">{playerName}</span>
+      <span className="block text-xs text-gray-500">({replacementName})</span>
+    </span>
+  );
+}
 
 function getChampionshipTeams(players: PlayerScore[]) {
   return CHAMPIONSHIP_TEAM_SEEDS.map((row) => {
@@ -129,9 +151,7 @@ export function Leaderboard({
                   {team.seededPlayers.map((seededPlayer) => (
                     <td key={`${team.team}-${seededPlayer.seed}`} className="px-3 py-3 text-sm text-gray-700">
                       {seededPlayer.player ? (
-                        <span className="block truncate" title={seededPlayer.player.member.name}>
-                          {seededPlayer.player.member.name}
-                        </span>
+                        <TeamSeedPlayerName playerName={seededPlayer.player.member.name} />
                       ) : (
                         <span className="text-gray-300">—</span>
                       )}
