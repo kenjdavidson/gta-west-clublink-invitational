@@ -44,8 +44,10 @@ const CHAMPIONSHIP_TEAM_SEEDS = [
   { team: "D", seeds: [4, 7, 14, 17] },
   { team: "E", seeds: [5, 6, 15, 16] },
 ] as const;
+
 const TEAM_TABLE_REPLACEMENTS: Record<string, string> = {
   "Dennis Stacey": "Chris Sarsdon",
+  "Tom Winski": "Jason Burch"
 };
 
 function TeamSeedPlayerName({ playerName }: { playerName: string }) {
