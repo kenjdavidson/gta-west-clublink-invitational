@@ -1,10 +1,27 @@
 ---
-const champions = [
-  { name: "Gary", initials: "G" },
-  { name: "Ken", initials: "K" },
-  { name: "Chris", initials: "C" },
-  { name: "Barry", initials: "B" },
-];
+import type { Member } from "../types/index.js";
+
+interface Props {
+  members: Member[];
+}
+
+const { members } = Astro.props;
+const championFirstNames = ["Gary", "Ken", "Chris", "Barry"];
+
+const champions = championFirstNames.map((firstName) => {
+  const normalizedFirstName = firstName.toLowerCase();
+  const matchedMember = members.find(
+    (member) => member.name.split(" ")[0]?.toLowerCase() === normalizedFirstName
+  );
+  const name = matchedMember?.name ?? firstName;
+  const initials = name
+    .split(" ")
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+
+  return { name, initials };
+});
 ---
 
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
