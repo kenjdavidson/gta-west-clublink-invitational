@@ -1,0 +1,26 @@
+---
+const champions = [
+  { name: "Gary", initials: "G" },
+  { name: "Ken", initials: "K" },
+  { name: "Chris", initials: "C" },
+  { name: "Barry", initials: "B" },
+];
+---
+
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+  <div class="rounded-2xl bg-white px-6 py-8 shadow ring-1 ring-yellow-300">
+    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-yellow-700">2026 Champions</p>
+    <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+      {
+        champions.map((champion) => (
+          <div class="flex flex-col items-center gap-3 rounded-xl bg-yellow-50 px-4 py-5 text-center ring-1 ring-yellow-200">
+            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-green-900 text-xl font-bold text-white">
+              {champion.initials}
+            </div>
+            <span class="text-sm font-semibold text-green-900">{champion.name}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

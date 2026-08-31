@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import ChampionsBanner from "../components/ChampionsBanner.astro";
 import Header from "../components/Header.astro";
 import { Leaderboard } from "../components/Leaderboard";
 import { loadConfig, getConfiguredYears } from "../utils/config-loader.js";
@@ -23,6 +24,7 @@ const pageTitle = `${config.league.name} – ${currentYear}`;
 
 <Layout title={pageTitle} years={allYears} currentYear={currentYear}>
   <Header years={allYears} currentYear={currentYear} leagueName={config.league.name} />
+  {currentYear === 2026 && <ChampionsBanner />}
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     {scores.players.length > 0 ? (
